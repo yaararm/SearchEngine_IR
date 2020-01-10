@@ -14,6 +14,7 @@ import java.util.Set;
 public class Word2Vec {
 
     private Word2VecModel model;
+    private double THRESHOLD = 0.975;
 
     public Word2Vec() {
         //init model
@@ -30,14 +31,17 @@ public class Word2Vec {
         Set<String> ans = new HashSet<>();
         for (String term : queryWords) {
             try {
-                List<Match> matches = model.forSearch().getMatches(term, 2);
+                List<Match> matches = model.forSearch().getMatches(term, 5);
                 for (Match m : matches) {
                     String matchWord = m.match();
                     double cosineDist = m.distance();
-                    similarTerms.add(new Pair<>(matchWord, cosineDist));
+                    if (cosineDist >= THRESHOLD && cosineDist < 1) {
+                        similarTerms.add(new Pair<>(matchWord, cosineDist));
+                        System.out.println(term+":   "+matchWord + ":" + cosineDist);
+                    }
+                //similarTerms.remove(0); //remove words itself
 
                 }
-                similarTerms.remove(0); //remove words itself
 
                 similarTerms.forEach(p -> ans.add(p.getKey()));
 
@@ -51,12 +55,39 @@ public class Word2Vec {
 
     //test
     public static void main(String[] args) {
-        Word2Vec testSemantics = new Word2Vec();
+        Set<String> terms = new HashSet<>();
+        terms.add("Falkland");
+        terms.add("petroleum");
+        terms.add("exploration");
+        terms.add("British");
+        terms.add("Chunnel");
+        terms.add("impact");
+        terms.add("blood-alcohol");
+        terms.add("fatalities");
+        terms.add("mutual");
+        terms.add("fund");
+        terms.add("predictors");
+        terms.add("human");
+        terms.add("smuggling");
+        terms.add("piracy");
+        terms.add("encryption");
+        terms.add("equipment");
+        terms.add("export");
+        terms.add("Nobel");
+        terms.add("prize");
+        terms.add("winners");
+        terms.add("cigar");
+        terms.add("smoking");
+
+
+
+
+        Word2Vec test = new Word2Vec();
         double startTime = System.currentTimeMillis();
         try {
-            //Set<String> ssss = testSemantics.getSimilarTerms("explore");
+            Set<String> ssss = test.getSimilarTerms(terms);
             //ssss.forEach(System.out::println);
-            System.out.println("year: " + (System.currentTimeMillis() - startTime) / 1000 + " seconds");
+            System.out.println( (System.currentTimeMillis() - startTime) / 1000 + " seconds");
         } catch (Exception e) {
             System.out.println(e);
         }
