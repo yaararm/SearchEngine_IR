@@ -36,7 +36,7 @@ public class Model extends Observable {
     protected static boolean isSemanticTreatment;
     protected static boolean is_API_synonym;
     private String multyQueryFile;
-    //protected List<Pair<String,Double>> result1;
+
     protected HashMap<String, List<Pair<String, Double>>> multyQureyresult ;
     protected HashMap<String, List<Pair<String, Double>>> sortedResultDocName;
     protected HashMap<String, String> fromDocNameToDocID ;
