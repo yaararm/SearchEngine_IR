@@ -25,26 +25,27 @@ public class Word2Vec {
         }
     }
 
-    public Set<String> getSimilarTerms(String term) throws Searcher.UnknownWordException {
+    public Set<String> getSimilarTerms(Set<String> queryWords) {
         List<Pair<String, Double>> similarTerms = new ArrayList<>();
-        try {
-            List<Match> matches = model.forSearch().getMatches(term, 4);
-            for (Match m : matches) {
-                String matchWord = m.match();
-                double cosineDist = m.distance();
-                similarTerms.add(new Pair<>(matchWord, cosineDist));
+        Set<String> ans = new HashSet<>();
+        for (String term : queryWords) {
+            try {
+                List<Match> matches = model.forSearch().getMatches(term, 2);
+                for (Match m : matches) {
+                    String matchWord = m.match();
+                    double cosineDist = m.distance();
+                    similarTerms.add(new Pair<>(matchWord, cosineDist));
 
-            }
+                }
                 similarTerms.remove(0); //remove words itself
 
-                Set<String> ans = new HashSet<>();
                 similarTerms.forEach(p -> ans.add(p.getKey()));
-                return ans;
 
-        } catch (Searcher.UnknownWordException e) {
-            return new HashSet<>();
+            } catch (Searcher.UnknownWordException e) {
+                System.out.println("unknown word: " + term);
+            }
         }
-
+        return ans;
 
     }
 
@@ -53,8 +54,8 @@ public class Word2Vec {
         Word2Vec testSemantics = new Word2Vec();
         double startTime = System.currentTimeMillis();
         try {
-            Set<String> ssss = testSemantics.getSimilarTerms("explore");
-            ssss.forEach(System.out::println);
+            //Set<String> ssss = testSemantics.getSimilarTerms("explore");
+            //ssss.forEach(System.out::println);
             System.out.println("year: " + (System.currentTimeMillis() - startTime) / 1000 + " seconds");
         } catch (Exception e) {
             System.out.println(e);

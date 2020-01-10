@@ -80,7 +80,7 @@ public class ViewModel extends Observable implements Observer {
         myModel.semanticTreatment(withSemnatic);
     }
 
-    public void runQuery(boolean b, String q) {
+    public void runQuery(boolean b, String q)  {
         myModel.runQuery(b,q);
     }
 
@@ -103,7 +103,7 @@ public class ViewModel extends Observable implements Observer {
     public StringBuilder queryToString() {
         return myModel.queryToString();
     }
-    public StringBuilder showEntitySearch(String docname){
+    public StringBuilder showEntitySearch(String docname)  {
 
         return myModel.showEntitySearch(docname);
     }

@@ -3,7 +3,10 @@ package Model;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,9 +19,9 @@ public class TextParse {
     private Hashtable<String, Integer> entities = new Hashtable<>();
 
     //-------------static Parser Fields----------------------------------
-    private Hashtable<String, Pattern> patterns = new Hashtable<>();
-    private HashMap<String, String> monthsKey = new HashMap<>();
-    private List<String> stopWordList;
+    private static Hashtable<String, Pattern> patterns;
+    private static HashMap<String, String> monthsKey;
+    private static List<String> stopWordList;
 
     //------------instance Fields for this thread
     private Stemmer stemmer = new Stemmer();
@@ -29,7 +32,7 @@ public class TextParse {
     //endregion
 
 
-    TextParse() {
+    TextParse()  {
         initPatterns();
         initMonthMap();
         init_stopWords();
@@ -38,7 +41,6 @@ public class TextParse {
 
     /**
      * this function send the doc to the regex extract functions
-     *
      */
     public void parseText(String text, boolean isStem) {
         terms.clear();
@@ -51,11 +53,11 @@ public class TextParse {
         cleanSplitText(splitText);
     }
 
-    public Hashtable<String, Integer> getTerms(){
+    public Hashtable<String, Integer> getTerms() {
         return new Hashtable(terms);
     }
 
-    public Hashtable<String, Integer> getEntities(){
+    public Hashtable<String, Integer> getEntities() {
         return new Hashtable(entities);
     }
 
@@ -253,6 +255,11 @@ public class TextParse {
 
     //region Init Functions
     private void initMonthMap() {
+        if(monthsKey!=null){
+            return;
+        }
+        monthsKey = new HashMap<>();
+
         monthsKey.put("JAN", "01");
         monthsKey.put("JANUARY", "01");
         monthsKey.put("FEB", "02");
@@ -279,6 +286,11 @@ public class TextParse {
     }
 
     private void initPatterns() {
+        if(patterns!=null){
+            return;
+        }
+        patterns = new Hashtable<>();
+
         final Pattern PERCENTAGE = Pattern.compile("\\b(([0-9])+(\\.([0-9])+)?)(\\s+)?((percent|percentage)(s)?\\b|%)",
                 Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.MULTILINE);
         patterns.put("PERCENTAGE", PERCENTAGE);
@@ -343,34 +355,52 @@ public class TextParse {
 
 
     }
-    private void  init_stopWords() {
+
+    private void init_stopWords() {
+        if(stopWordList!=null){
+            return;
+        }
+
         stopWordList = new ArrayList<>();
+        BufferedReader br;
         try {
             File file = new File(Model.posting_Path + "\\stop_words.txt");
-            //File file = new File("C:\\Users\\tomer\\Documents\\IR\\" + "stop_words.txt");
-            BufferedReader br = new BufferedReader(new FileReader(file));
+            br = new BufferedReader(new FileReader(file));
             String st;
             while ((st = br.readLine()) != null) {
                 stopWordList.add(st.toLowerCase());
             }
-            //region add junk words
-            stopWordList.add("CELLRULE".toLowerCase());
-            stopWordList.add("/CELLRULE".toLowerCase());
-            stopWordList.add("/ROWRULE".toLowerCase());
-            stopWordList.add("ROWRULE".toLowerCase());
-            stopWordList.add("/TABLECELL".toLowerCase());
-            stopWordList.add("TABLECELL".toLowerCase());
-            stopWordList.add("CHJ".toLowerCase());
-            stopWordList.add("CVJ".toLowerCase());
-            stopWordList.add("mr");
-            stopWordList.add("TABLECELL-CHJ-CVJ-C".toLowerCase());
-            stopWordList.add("TABLECELL-CHJ-R-CVJ-C".toLowerCase());
-            stopWordList.add("F-P".toLowerCase());
-            //endregion
-        } catch (Exception ignored) {
 
+        } catch (Exception E) {
+            try {
+                File file = new File("Resources\\stop_words.txt");
+                br = new BufferedReader(new FileReader(file));
+                String st;
+                while ((st = br.readLine()) != null) {
+                    stopWordList.add(st.toLowerCase());
+                }
+
+            } catch (Exception e) {
+                System.out.println("no stop Words Found!!!!");
+            }
         }
+
+        //region add junk words
+        stopWordList.add("CELLRULE".toLowerCase());
+        stopWordList.add("/CELLRULE".toLowerCase());
+        stopWordList.add("/ROWRULE".toLowerCase());
+        stopWordList.add("ROWRULE".toLowerCase());
+        stopWordList.add("/TABLECELL".toLowerCase());
+        stopWordList.add("TABLECELL".toLowerCase());
+        stopWordList.add("CHJ".toLowerCase());
+        stopWordList.add("CVJ".toLowerCase());
+        stopWordList.add("mr");
+        stopWordList.add("TABLECELL-CHJ-CVJ-C".toLowerCase());
+        stopWordList.add("TABLECELL-CHJ-R-CVJ-C".toLowerCase());
+        stopWordList.add("F-P".toLowerCase());
+        //endregion
     }
+
     //endregion
 
     //region Pattern processing

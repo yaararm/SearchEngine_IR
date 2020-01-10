@@ -453,7 +453,7 @@ public class Model extends Observable {
         isSemanticTreatment = isSemantic;
     }
 
-    public void runQuery(boolean isOneQuery, String q) {
+    public void runQuery(boolean isOneQuery, String q)  {
         fromDocNameToDocID = new HashMap<>();
         if (isOneQuery) {
 
@@ -467,7 +467,7 @@ public class Model extends Observable {
             MultyQueryResult.put("123", ans);
             is_one_query = true;
             this.multyQureyresult = MultyQueryResult;
-            System.out.println("test");
+            this.sortedResultDocName = sortAndUpdateResult();
         } else { // multy
             Searcher searcher = new Searcher(posting_Path);
             is_one_query = false;
