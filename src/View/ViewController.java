@@ -279,7 +279,7 @@ public class ViewController implements Observer {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(null);
-            alert.setContentText("ther is somthing wrong with your file");
+            alert.setContentText("there is somthing wrong with your file");
             alert.initStyle(StageStyle.UTILITY);
             alert.showAndWait();
         }
@@ -446,7 +446,8 @@ public class ViewController implements Observer {
             myTable.getColumns().add(column2);
             myTable.getColumns().add(column3);
             myTable.setEditable(true);
-            myTable.getSelectionModel().setCellSelectionEnabled(true);
+            //myTable.getSelectionModel().setCellSelectionEnabled(true);
+          //  myTable.getSelectionModel();
 
             for (Map.Entry<String, List<Pair<String, Double>>> entry : queryResult.entrySet()) {
                 int i = 1;
@@ -480,7 +481,7 @@ public class ViewController implements Observer {
                 int index = myTable.getSelectionModel().getSelectedIndex();
                 if (!olist.isEmpty()) {
                     String docName = olist.get(0).getdocName();
-                    System.out.println(docName);
+                    //System.out.println(docName);
                     String ans = myViewModel.showEntitySearch(docName).toString();
                     Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
                     alert2.setTitle("Top5 Entity");

@@ -32,7 +32,7 @@ public class Model extends Observable {
 
     //part B
     static boolean is_one_query;
-    protected static boolean isEntitySearch;
+
     protected static boolean isSemanticTreatment;
     protected static boolean isClickStream;
     private String multyQueryFile;
