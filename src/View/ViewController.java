@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
 
+import javax.swing.text.StyledEditorKit;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -53,7 +54,7 @@ public class ViewController implements Observer {
     public javafx.scene.control.TextField MultyQuery;
     public javafx.scene.control.Button show_Entity;
     public javafx.scene.control.CheckBox SemanticTreatment;
-    public javafx.scene.control.CheckBox click_stream;
+    public javafx.scene.control.CheckBox API_synonym;
     public javafx.scene.control.Button runQuery_button;
     public javafx.scene.control.Button show_result;
     public javafx.scene.control.Button save_result;
@@ -289,7 +290,7 @@ public class ViewController implements Observer {
     }
 
     public void is_API_synonym(ActionEvent actionEvent) {
-        if (click_stream.isSelected()) {
+        if (API_synonym.isSelected()) {
             myViewModel.API_synonym(true);
         } else {
             myViewModel.API_synonym(false);
@@ -491,23 +492,26 @@ public class ViewController implements Observer {
                     String docName = olist.get(0).getdocName();
                     //System.out.println(docName);
                     String ans = myViewModel.showEntitySearch(docName).toString();
-
-
                    // Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
                    // alert2.setTitle("Top5 Entity");
                    // alert2.setHeaderText(null);
                    // alert2.setContentText(ans);
                    // alert2.showAndWait();
-
-
+                    Label docn = new Label(docName);
+                    docn.setTextFill(Color.BLACK);
+                    docn.setFont(Font.font("Verdana",  FontWeight.BOLD,14));
+                    docn.setUnderline(true);
                     Label label3 = new Label(ans);
-                    label3.setTextFill(Color.LIGHTBLUE);
+                    label3.setTextFill(Color.BLACK);
                     label3.setFont(Font.font("Verdana", 14));
-                   // VBox TOP5 = new VBox();
-                    //TOP5.getChildren().add(label3);
-                    //TOP5.setAlignment(Pos.CENTER);
-
-                    Scene scene2 = new Scene(label3, 400, 400);
+                    VBox TOP5 = new VBox();
+                    TOP5.getChildren().addAll(docn,label3);
+                    TOP5.setAlignment(Pos.CENTER_LEFT);
+                    TOP5.setSpacing(5);
+                    TOP5.setPadding(new Insets(10, 10, 0, 10));
+                    String style = "-fx-background-color: rgba(118,255,242,0.43);";
+                    TOP5.setStyle(style);
+                    Scene scene2 = new Scene(TOP5, 400, 200);
                     Stage stage2 = new Stage();
                     stage2.setScene(scene2);
                     stage2.setTitle("Top5 Entity");

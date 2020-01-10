@@ -550,7 +550,7 @@ public class Model extends Observable {
 
     public StringBuilder showEntitySearch(String docName) {
         StringBuilder ans = new StringBuilder();
-        ans.append(docName + ":\n\n");
+        //ans.append(docName + ":\n\n");
 
         String docId = fromDocNameToDocID.get(docName);
         EntitiesFinder ef = new EntitiesFinder(posting_Path);
