@@ -23,7 +23,7 @@ public class Searcher {
     private Set<String> currentQueryTerms = new HashSet<>();
 
 
-    public Searcher(String posting_Path) {
+    public Searcher(String posting_Path)  {
         this.qParser = new TextParse();
         this.posting_Path = posting_Path;
         ranker = new Ranker();
@@ -52,12 +52,20 @@ public class Searcher {
 
         //add synonymous term if semantic handle is on
         if(Model.isSemanticTreatment){
-            Set<String> similarWords;// = w2v.getSimilarTerms(queryTerms);
+            // always parse w/o stem for w2v model
+            if(isStem) qParser.parseText(query, false);
+            Set<String> queryTermWOStem = qParser.getTerms().keySet();
+
+            Set<String> similarWords = w2v.getSimilarTerms(queryTermWOStem);
 
             StringBuilder similarWordsAsString = new StringBuilder();
-            //similarWords.forEach(s -> similarWordsAsString.append(s).append(" "));
+            similarWords.forEach(s -> similarWordsAsString.append(s).append(" "));
 
-            //queryTerms.addAll(synonymousTerms);
+            //parse new similar terms
+            qParser.parseText(new String(similarWordsAsString), isStem);
+            Set<String> queryTermWithStem = qParser.getTerms().keySet();
+
+            queryTerms.addAll(queryTermWithStem);
         }
 
         //read relevant posting file and extract their data

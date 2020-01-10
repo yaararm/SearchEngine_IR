@@ -15,9 +15,9 @@ public class Ranker {
     private HashMap<String, Double> rankedDocsTitle = new HashMap<>();
     public HashMap<String, Double> rankedDocs = new HashMap<>();
 
-    private final double k1 = 1.6;
-    private final double b = 0.95;
-    private final double BM25_WEIGHT = 0.95;
+    private final double k1 = 1.2;
+    private final double b = 0.75;
+    private final double BM25_WEIGHT = 0.9;
     private final double TITLE_WEIGHT = 0.1;
 
 
