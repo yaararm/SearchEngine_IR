@@ -25,7 +25,7 @@ public class Model extends Observable {
     static ConcurrentHashMap<String, DocInfo> docs = new ConcurrentHashMap<>();
 
     //protected static String corpus_Path;
-    protected static String corpus_Path = "C:\\Users\\tomer\\Documents\\IR\\smallcorpus";
+    protected static String corpus_Path ;
 
     protected static String posting_Path;
     protected static boolean isStem;
@@ -34,7 +34,7 @@ public class Model extends Observable {
     static boolean is_one_query;
     protected static boolean isEntitySearch;
     protected static boolean isSemanticTreatment;
-    protected static boolean isClickStream;
+    protected static boolean is_API_synonym;
     private String multyQueryFile;
     //protected List<Pair<String,Double>> result1;
     protected HashMap<String, List<Pair<String, Double>>> multyQureyresult ;
@@ -445,8 +445,8 @@ public class Model extends Observable {
         multyQueryFile = file;
     }
 
-    public void is_click_stream_seaech(boolean is_click) {
-        isClickStream = is_click;
+    public void is_API_synonym(boolean is_click) {
+        is_API_synonym = is_click;
     }
 
     public void semanticTreatment(boolean isSemantic) {
@@ -467,7 +467,7 @@ public class Model extends Observable {
             MultyQueryResult.put("123", ans);
             is_one_query = true;
             this.multyQureyresult = MultyQueryResult;
-            System.out.println("test");
+            this.sortedResultDocName = sortAndUpdateResult();
         } else { // multy
             Searcher searcher = new Searcher(posting_Path);
             is_one_query = false;
@@ -591,5 +591,13 @@ public class Model extends Observable {
 
     public boolean getSemanticTreatment(){
         return isSemanticTreatment;
+    }
+
+    public boolean getIsStem() {
+        return isStem;
+    }
+
+    public boolean getISApisyn() {
+        return is_API_synonym;
     }
 }
