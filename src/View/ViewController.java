@@ -406,7 +406,7 @@ public class ViewController implements Observer {
                 Alert alert4 = new Alert(Alert.AlertType.CONFIRMATION);
                 alert4.setTitle("Entity Search");
                 alert4.setHeaderText(null);
-                alert4.setContentText("corpus path is necessary in order to watch TOP 5 entities\n Are you sure you want to continue without it?");
+                alert4.setContentText("corpus path is necessary in order \n to watch TOP 5 entities\n Are you sure you want to continue without it?");
                 alert4.initStyle(StageStyle.UTILITY);
 
                 Optional<ButtonType> result = alert4.showAndWait();
@@ -483,11 +483,27 @@ public class ViewController implements Observer {
                     String docName = olist.get(0).getdocName();
                     //System.out.println(docName);
                     String ans = myViewModel.showEntitySearch(docName).toString();
-                    Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
-                    alert2.setTitle("Top5 Entity");
-                    alert2.setHeaderText(null);
-                    alert2.setContentText(ans);
-                    alert2.showAndWait();
+
+
+                   // Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                   // alert2.setTitle("Top5 Entity");
+                   // alert2.setHeaderText(null);
+                   // alert2.setContentText(ans);
+                   // alert2.showAndWait();
+
+
+                    Label label3 = new Label(ans);
+                    label3.setTextFill(Color.LIGHTBLUE);
+                    label3.setFont(Font.font("Verdana", 14));
+                   // VBox TOP5 = new VBox();
+                    //TOP5.getChildren().add(label3);
+                    //TOP5.setAlignment(Pos.CENTER);
+
+                    Scene scene2 = new Scene(label3, 400, 400);
+                    Stage stage2 = new Stage();
+                    stage2.setScene(scene2);
+                    stage2.setTitle("Top5 Entity");
+                    stage2.show();
                 }
 
                 else{
