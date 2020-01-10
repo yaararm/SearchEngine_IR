@@ -3,7 +3,6 @@
  */
 package View;
 
-import Model.Model;
 import ViewModel.ViewModel;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -290,9 +289,9 @@ public class ViewController implements Observer {
 
     public void click_stream_seaech(ActionEvent actionEvent) {
         if (click_stream.isSelected()) {
-            myViewModel.API_synonym(true);
+            myViewModel.click_stream_seaech(true);
         } else {
-            myViewModel.API_synonym(false);
+            myViewModel.click_stream_seaech(false);
         }
 
     }
@@ -346,12 +345,8 @@ public class ViewController implements Observer {
             StringBuilder query = myViewModel.queryToString();
             if (query != null) {
                 try {
-
-                    String pathToSave = (myViewModel.getSemanticTreatment()) ? path + "\\qr_semantic" : path + "\\qr";
-                    String p2 = (myViewModel.getIsStem()) ? pathToSave+"_stem" : pathToSave;
-                    String p4 = (myViewModel.getIsApiSyn()) ? p2+"_APIsyn" : p2;
-                    String p3 = p4+".txt";
-                    BufferedWriter bwr = new BufferedWriter(new FileWriter(new File(p3)));
+                    String pathToSave = (myViewModel.getSemanticTreatment()) ? path + "\\query_result_semantic.txt" : path + "\\query_result.txt";
+                    BufferedWriter bwr = new BufferedWriter(new FileWriter(new File(pathToSave)));
 
                     //write contents of StringBuffer to a file
                     bwr.write(query.toString());
@@ -476,11 +471,8 @@ public class ViewController implements Observer {
             labelHb.getChildren().add(label2);
 
             Button show = new Button("show Entity for Document");
-            String style1 = " -fx-text-fill: black; -fx-background-radius: 200px, 200px, 200px, 200px;  -fx-background-color: linear-gradient(#c3ffea, #46ffdd); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 )";
-            show.setStyle(style1);
             if (noCorpusPath) {
-                show.setVisible(false);
-                label2.setVisible(false);
+                show.setDisable(true);
             }
             show.setOnAction((ActionEvent e) -> {
 
@@ -521,8 +513,6 @@ public class ViewController implements Observer {
             vbox.setPadding(new Insets(10, 10, 0, 10));
             //vbox.setPadding(new Insets(25, 25, 25, 25));
             vbox.getChildren().addAll(labelHb, myTable, select);
-            String style = "-fx-background-color: rgba(72,174,176,0.87);";
-            vbox.setStyle(style);
             // StackPane sp = new StackPane(buttonHb,myTable,label);
             Scene scene = new Scene(vbox, 500, 800);
             Stage stage = new Stage();
