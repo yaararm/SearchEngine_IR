@@ -49,8 +49,10 @@ public class Searcher {
         Set<String> queryTerms = getCurrentQueryTerms();
         Set<String> queryEntities = getQueryEntities();
 
+        Set<String> allTermsToCalculate = new HashSet<>(queryTerms);
 
-        //add synonymous term if semantic handle is on
+
+        //add related term if semantic handle is on
         if(Model.isSemanticTreatment){
             // always parse w/o stem for w2v model
             if(isStem) qParser.parseText(query, false);
@@ -65,12 +67,18 @@ public class Searcher {
             qParser.parseText(new String(similarWordsAsString), isStem);
             Set<String> queryTermWithStem = qParser.getTerms().keySet();
 
-            queryTerms.addAll(queryTermWithStem);
+            allTermsToCalculate.addAll(queryTermWithStem);
+        }
+
+        //add synonymous term if API synonymous is on
+        if(Model.is_API_synonym){
+            Set<String> synonymousTerms = getSynonymousTerms(queryTerms);
+            allTermsToCalculate.addAll(synonymousTerms);
         }
 
         //read relevant posting file and extract their data
         //region handle regular terms:
-        for (String term : queryTerms) {
+        for (String term : allTermsToCalculate) {
             this.currentQueryTerms.add(term);
             term = findTermCaseInDic(term);
             if (term != null) {
