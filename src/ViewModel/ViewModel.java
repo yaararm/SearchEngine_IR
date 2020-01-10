@@ -84,8 +84,8 @@ public class ViewModel extends Observable implements Observer {
         myModel.runQuery(b,q);
     }
 
-    public void API_synonym(boolean is_click) {
-        myModel.is_API_synonym(is_click);
+    public void click_stream_seaech(boolean is_click) {
+        myModel.is_click_stream_seaech(is_click);
     }
 
     public void set_file_for_multy_query(String file) {
@@ -111,12 +111,4 @@ public class ViewModel extends Observable implements Observer {
        return myModel.getSemanticTreatment();
     }
 
-    public boolean getIsStem() {
-        return myModel.getIsStem();
-    }
-
-    public boolean getIsApiSyn() {
-      return  myModel.getISApisyn();
-
-    }
 }

@@ -20,8 +20,7 @@ public class Word2Vec {
         //init model
         String modelFilePath = "Resources/word2vec.c.output.model.txt";
         try {
-           model = Word2VecModel.fromTextFile(new File(modelFilePath));
-            //model = Word2VecModel.fromBinFile(new File("C:\\Users\\YAARA\\Desktop\\checkFiles\\IR\\300.bin"));
+            model = Word2VecModel.fromTextFile(new File(modelFilePath));
         } catch (Exception e) {
             System.out.println(e);
         }
