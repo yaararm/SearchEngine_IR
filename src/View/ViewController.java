@@ -287,7 +287,7 @@ public class ViewController implements Observer {
 
     }
 
-    public void click_stream_seaech(ActionEvent actionEvent) {
+    public void is_API_synonym(ActionEvent actionEvent) {
         if (click_stream.isSelected()) {
             myViewModel.click_stream_seaech(true);
         } else {
