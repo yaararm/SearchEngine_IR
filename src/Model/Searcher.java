@@ -1,3 +1,6 @@
+/**
+ * this class get the query words and return relevant rate docs from the corpus
+ */
 package Model;
 
 
@@ -33,6 +36,12 @@ public class Searcher {
         w2v = new Word2Vec();
     }
 
+    /**
+     *
+     * @param query
+     * @param queryDescription
+     * @return the relevant docs with their score
+     */
     public List<Pair<String, Double>> getRankedDocsFromQuery(String query,String queryDescription) {
         //process query and query description
         updateRelevantDocsToRankFromQuery(query);
@@ -45,6 +54,10 @@ public class Searcher {
         return ranker.getRankedDocs();
     }
 
+    /**
+     * this method update score of relevant docs that found with description words
+     * @param queryDescription
+     */
     private void updateRelevantDocsToRankFromDescription(String queryDescription) {
         relevantQueryDescriptionDocs = new HashMap<>();
 
@@ -59,6 +72,10 @@ public class Searcher {
 
     }
 
+    /**
+     * this method update the score of each relevant doc according to user choice- word2vec model or synonym finder
+     * @param query
+     */
     private void updateRelevantDocsToRankFromQuery(String query) {
         //init relevant docs hash map for this query
         relevantQueryDocs = new HashMap<>();
@@ -107,8 +124,14 @@ public class Searcher {
         // relevantQueryDocs DS is now updated!
     }
 
+    /**
+     * this method read relevant posting file and extract their data
+     * @param terms
+     * @param entities
+     * @param isQuery
+     */
     private void readTermsInPostingToDict(Set<String> terms,Set<String> entities ,boolean isQuery) {
-        //read relevant posting file and extract their data
+
 
         //region handle regular terms:
         for (String term : terms) {
@@ -139,10 +162,20 @@ public class Searcher {
         //endregion
     }
 
+    /**
+     *
+     * @param queryTerms
+     * @return set of synonym terms
+     */
     private Set<String> getSynonymousTerms(Set<String> queryTerms) {
         return synonymFinder.getSetOfQuery(queryTerms);
     }
 
+    /**
+     * this method fill the data (tf-df) for each documnet in query to the relvant
+     * @param termData
+     * @param isQuery
+     */
     private void insertDataToRelevantDocsDS(HashMap<String, Pair<Integer, Integer>> termData, boolean isQuery) {
         for (Map.Entry<String, Pair<Integer, Integer>> entry : termData.entrySet()) {
             String docID = entry.getKey();
@@ -162,6 +195,11 @@ public class Searcher {
         }
     }
 
+    /**
+     *
+     * @param term
+     * @return the term in his original form in dictionary
+     */
     private String findTermCaseInDic(String term) {
         if (Model.terms.containsKey(term.toLowerCase()))
             return term.toLowerCase();
@@ -171,6 +209,11 @@ public class Searcher {
         return null;
     }
 
+    /**
+     *
+     * @param entity
+     * @return list of entity for specific doc
+     */
     private List<String> findEntityCaseInDic(String entity) {
         List<String> ans = new ArrayList<>();
 
@@ -185,15 +228,28 @@ public class Searcher {
         return ans;
     }
 
+    /**
+     *
+     * @return current Query Terms
+     */
     private Set<String> getCurrentQueryTerms() {
         return new HashSet<>(qParser.getTerms().keySet());
     }
 
+    /**
+     *
+     * @return QueryEntities
+     */
     private Set<String> getQueryEntities() {
         return new HashSet<>(qParser.getEntities().keySet());
     }
 
-    // return list of <DocID,Pair<tf,df>> for one term
+    /**
+     *
+     * @param term
+     * @return return list of <DocID,Pair<tf,df>> for one term
+     */
+
     private HashMap<String, Pair<Integer, Integer>> readTermDataFromPosting(String term) {
 
         HashMap<String, Pair<Integer, Integer>> dataFromPosting = new HashMap<>();

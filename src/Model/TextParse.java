@@ -1,3 +1,6 @@
+/**
+ * this class parse query text
+ */
 package Model;
 
 import java.io.BufferedReader;
@@ -53,10 +56,18 @@ public class TextParse {
         cleanSplitText(splitText);
     }
 
+    /**
+     * return the term- tf for each term
+     * @return
+     */
     public Hashtable<String, Integer> getTerms() {
         return new Hashtable(terms);
     }
 
+    /**
+     * return the entity- tf for each entity
+     * @return
+     */
     public Hashtable<String, Integer> getEntities() {
         return new Hashtable(entities);
     }

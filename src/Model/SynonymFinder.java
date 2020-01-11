@@ -1,3 +1,6 @@
+/**
+ * this class find synonym words to query words and score them
+ */
 package Model;
 
 import javafx.util.Pair;
@@ -23,6 +26,11 @@ public class SynonymFinder {
         this.rate = 0.75;
     }
 
+    /**
+     *
+     * @param queryWords
+     * @return set of synonym words
+     */
     public Set<String> getSetOfQuery(Set<String> queryWords) {
         ArrayList<Pair<String,Double>> scoredWords = new ArrayList<>();
         Set<String> synonyms  =  new HashSet<String>() ;
@@ -43,6 +51,12 @@ public class SynonymFinder {
         return synonyms;
     }
 
+    /**
+     * this method find identical word for certain word
+     * @param s
+     * @return
+     * @throws Exception
+     */
     private  Pair<String, Double> getIdentical(String s) throws Exception {
 
         URL yahoo = new URL("https://api.datamuse.com/words?ml="+s);
@@ -71,6 +85,11 @@ public class SynonymFinder {
         return null;
     }
 
+    /**
+     *
+     * @param scoredWords
+     * @return synonym words with higher score
+     */
     private Set<String> checkScore ( ArrayList<Pair<String,Double>> scoredWords){
         Set<String> synonyms  =  new HashSet<String>() ;
         for (Pair <String,Double> p: scoredWords){

@@ -28,24 +28,44 @@ public class DocInfo implements Serializable {
         this.fileName = fileName;
     }
 
+    /**
+     *
+     * @return the max ocuurrences of specific word
+     */
     public int getMax_tf() {
         return max_tf;
     }
-
+    /**
+     *
+     * @return num of uniqe words
+     */
     public int getUniqeWords() {
         return uniqeWords;
     }
 
+    /**
+     *
+     * @returndoc name
+     */
     public String getDocName() {
         return docName;
     }
 
+    /**
+     *
+     * @return title of doc
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     *
+     * @return File Name
+     */
     public String getFileName() {
         return fileName;
     }
 
 }
+

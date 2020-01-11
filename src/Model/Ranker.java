@@ -1,3 +1,6 @@
+/**
+ * this class responsible to rank the relevant docs
+ */
 package Model;
 
 import javafx.util.Pair;
@@ -36,6 +39,10 @@ public class Ranker {
 
     }
 
+    /**
+     *
+     * @return the ranked doc (doc name and score) per query
+     */
     public List<Pair<String, Double>> getRankedDocs() {
 
         //iterate over docs from query, calculate Total Rank and add it to rankedDocs
@@ -62,6 +69,10 @@ public class Ranker {
 
     }
 
+    /**
+     * this function calculate ranked doc according to the description words
+     * @param relevantDocs
+     */
     public void calculateQueryDescription(HashMap<String, List<Pair<Integer, Integer>>> relevantDocs) {
         rankedDocs.clear();
         rankedDocsByDescriptionBM25.clear();
@@ -77,6 +88,11 @@ public class Ranker {
 
     }
 
+    /**
+     * this function calculate query result according to words of the query
+     * @param relevantDocs
+     * @param queryTerms
+     */
     public void calculateQuery(HashMap<String, List<Pair<Integer, Integer>>> relevantDocs, Set<String> queryTerms) {
 
         rankedDocs.clear();
@@ -98,6 +114,11 @@ public class Ranker {
 
     }
 
+    /**
+     *
+     * @param rankedDocs
+     * @return the relavnt docs in sorted way
+     */
     private List<Pair<String, Double>> sortRankedQuery(HashMap<String, Double> rankedDocs) {
         List<Pair<String, Double>> ans = new ArrayList<Pair<String, Double>>();
         Map<String, Double> sorted = rankedDocs
@@ -120,6 +141,12 @@ public class Ranker {
         return ans;
     }
 
+    /**
+     * calculate the BM25 score for document
+     * @param docName
+     * @param tf_df
+     * @return
+     */
     private double scoreBM25ForDoc(String docName, List<Pair<Integer, Integer>> tf_df) {
 
         double score = 0;
@@ -134,6 +161,12 @@ public class Ranker {
         return score;
     }
 
+    /**
+     * calculate the score of the title of the document
+     * @param docID
+     * @param queryTerms
+     * @return
+     */
     private double scoreTitle(String docID, Set<String> queryTerms) {
         String docTitle = Model.docs.get(docID).getTitle().toLowerCase();
         double termsInTitleCounter = 0;
@@ -148,6 +181,10 @@ public class Ranker {
 
     }
 
+    /**
+     *
+     * @return the average length of documnet in corpus
+     */
     private double calculate_average_length() {
         double avg = 0;
         for (DocInfo value : Model.docs.values()) {
@@ -156,6 +193,10 @@ public class Ranker {
         return avg / numOfDocumnetInCorpus;
     }
 
+    /**
+     * normalize the bm 25 score
+     * @param rankedDocsBM25
+     */
     private void NormalizeBM25Score(HashMap<String, Double> rankedDocsBM25) {
         if (!rankedDocsBM25.isEmpty()) {
 
