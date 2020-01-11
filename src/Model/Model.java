@@ -14,6 +14,8 @@ import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Model extends Observable {
@@ -24,8 +26,9 @@ public class Model extends Observable {
     static ConcurrentHashMap<String, Pair<String, Integer>> terms = new ConcurrentHashMap<>();
     static ConcurrentHashMap<String, DocInfo> docs = new ConcurrentHashMap<>();
 
+
     //protected static String corpus_Path;
-    protected static String corpus_Path ;
+    protected static String corpus_Path;
 
     protected static String posting_Path;
     protected static boolean isStem;
@@ -37,9 +40,9 @@ public class Model extends Observable {
     protected static boolean is_API_synonym;
     private String multyQueryFile;
 
-    protected HashMap<String, List<Pair<String, Double>>> multyQureyresult ;
+    protected HashMap<String, List<Pair<String, Double>>> multyQureyresult;
     protected HashMap<String, List<Pair<String, Double>>> sortedResultDocName;
-    protected HashMap<String, String> fromDocNameToDocID ;
+    protected HashMap<String, String> fromDocNameToDocID;
 
     //endregion
 
@@ -459,10 +462,10 @@ public class Model extends Observable {
 
             Searcher searcher = new Searcher(posting_Path);
             HashMap<String, List<Pair<String, Double>>> MultyQueryResult = new HashMap<>();
-            List<Pair<String, Double>> ans =searcher.getRankedDocsFromQuery(q);
-           for (Pair<String,Double> p :ans){
+            List<Pair<String, Double>> ans = searcher.getRankedDocsFromQuery(q,"");
+            for (Pair<String, Double> p : ans) {
 
-                fromDocNameToDocID.put( (docs.get(p.getKey())).getDocName(), p.getKey());
+                fromDocNameToDocID.put((docs.get(p.getKey())).getDocName(), p.getKey());
             }
             MultyQueryResult.put("123", ans);
             is_one_query = true;
@@ -471,44 +474,71 @@ public class Model extends Observable {
         } else { // multy
             Searcher searcher = new Searcher(posting_Path);
             is_one_query = false;
-            HashMap<String, String> MultyQuery = parseMultyQuery(q);
+            HashMap<String, Pair<String,String>> MultyQuery = parseMultyQuery(q); // pair of String query, description
+
             HashMap<String, List<Pair<String, Double>>> MultyQueryResult = new HashMap<>();
 
-            for (Map.Entry<String, String> entry : MultyQuery.entrySet()) {
-                List<Pair<String, Double>> ans = searcher.getRankedDocsFromQuery(entry.getValue());
+            for (Map.Entry<String, Pair<String,String>> entry : MultyQuery.entrySet()) {
+                //long s = System.currentTimeMillis();
+                List<Pair<String, Double>> ans = searcher.getRankedDocsFromQuery(entry.getValue().getKey(),entry.getValue().getValue());
+               // long f = System.currentTimeMillis();
+               // long dur = f - s;
+               // System.out.println(entry.getKey() + ": " + dur);
                 MultyQueryResult.put(entry.getKey(), ans);
-                for (Pair<String,Double> p : ans) {
-                    fromDocNameToDocID.put( (docs.get(p.getKey())).getDocName(),  p.getKey() );
+                for (Pair<String, Double> p : ans) {
+                    fromDocNameToDocID.put((docs.get(p.getKey())).getDocName(), p.getKey());
                 }
             }
             this.multyQureyresult = MultyQueryResult;
             this.sortedResultDocName = sortAndUpdateResult();
+
         }
     }
 
-    private HashMap<String, String> parseMultyQuery(String path) {
+    private HashMap<String, Pair<String,String>> parseMultyQuery(String path) {
         this.multyQueryFile = path;
         File multyQuery = new File(path); // current directory
-        LinkedHashMap<String, String> extractQuery = new LinkedHashMap<>();
+        LinkedHashMap<String, Pair<String,String>> extractQuery = new LinkedHashMap<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(multyQuery))) {
             String line;
-            String [] query = new String[2];
+            String[] query = new String[3];
             query[0] = "";
             query[1] = "";
+            query[2] = "";
+            String desc="";
+            boolean descLine = false;
             while ((line = br.readLine()) != null) {
 
-               if (line.contains("<num> Number:")){
-                   query[0] = line.substring(13).trim();
-               }
-               if (line.contains("<title>")){
-                   query[1] = line.substring(7).trim();
-               }
-               if ( query[0].compareTo("")!=0 && query[1].compareTo("")!=0){ // not empty
-                   extractQuery.put(query[0],query[1]);
-                   query[1] = "";
-                   query[0] = "";
-               }
+                if (line.contains("<num> Number:")) {
+                    query[0] = line.substring(13).trim();
+                }
+                if (line.contains("<title>")) {
+                    query[1] = line.substring(7).trim();
+                }
+                if (descLine){
+                    desc+=line;
+                    if (line.contains("<narr>"))  {
+                        descLine = false;
+                        int n = desc.indexOf("<narr>");
+                        query[2] = cleanDescription(desc.trim().substring(0,n));
+                        desc="";
+
+                    }
+                }
+                if (line.contains("<desc> Description: ")){
+                    descLine = true;
+
+                }
+
+                if (query[0].compareTo("") != 0 && query[1].compareTo("") != 0 && query[2].compareTo("")!=0 && !descLine) { // not empty
+                    extractQuery.put(query[0], new Pair( query[1], query[2]));
+                   // System.out.println("num: "+query[0]+" title: "+query[1]);
+                    System.out.println("desc: "+query[2]);
+                    query[1] = "";
+                    query[0] = "";
+                    query[2] = "";
+                }
             }
 
         } catch (IOException io) {
@@ -517,8 +547,28 @@ public class Model extends Observable {
         //Set <String> set = extractQuery.keySet();
 
 
-
         return extractQuery;
+    }
+
+    private String cleanDescription(String desc) {
+
+        if (desc.toLowerCase().contains("identify documents that discuss")){
+            desc = desc.toLowerCase().replace("identify documents that discuss","");
+            //return desc;
+        }
+        if (desc.toLowerCase().contains("find documents that discuss")){
+            desc = desc.toLowerCase().replace("find documents that discuss","");
+            //return desc;
+        }
+        if (desc.toLowerCase().contains("documents")) {
+            desc = desc.toLowerCase().replace("documents", "");
+
+        }
+        if (desc.toLowerCase().contains("identify")) {
+            desc = desc.toLowerCase().replace("identify", "");
+
+        }
+        return desc;
     }
 
     private HashMap<String, List<Pair<String, Double>>> sortAndUpdateResult() {
@@ -558,7 +608,7 @@ public class Model extends Observable {
         DecimalFormat df2 = new DecimalFormat("#.###");
 
         for (Pair<String, Double> p : topEntities) {
-            ans.append(p.getKey() + " : rank=" + df2.format(p.getValue())+"\n");
+            ans.append(p.getKey() + " : rank=" + df2.format(p.getValue()) + "\n");
         }
 
 
@@ -575,9 +625,9 @@ public class Model extends Observable {
             for (Map.Entry<String, List<Pair<String, Double>>> entry : ansQuery.entrySet()) {
 
                 for (Pair p : entry.getValue()) {
-                   // ans.append(entry.getKey() + " 0 " + p.getKey() + " 1 " + "\n");
+                    // ans.append(entry.getKey() + " 0 " + p.getKey() + " 1 " + "\n");
                     //or long way?
-                   ans.append(entry.getKey()+" 0 "+p.getKey()+ " 1 12.1 mt" +"\n" );
+                    ans.append(entry.getKey() + " 0 " + p.getKey() + " 1 12.1 mt" + "\n");
                 }
             }
             return ans;
@@ -589,7 +639,7 @@ public class Model extends Observable {
         return sortedResultDocName;
     }
 
-    public boolean getSemanticTreatment(){
+    public boolean getSemanticTreatment() {
         return isSemanticTreatment;
     }
 
@@ -600,4 +650,6 @@ public class Model extends Observable {
     public boolean getISApisyn() {
         return is_API_synonym;
     }
+
+
 }
