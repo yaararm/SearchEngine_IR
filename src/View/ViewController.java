@@ -290,37 +290,46 @@ public class ViewController implements Observer {
 
     public void runQuery(ActionEvent actionEvent) {
 
-
-        if (MultyQuery.getText().trim().isEmpty() && Query.getText().trim().isEmpty()) {// || Query.getText().trim().isEmpty())) {
+        if (myViewModel.getDictionary().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(null);
-            alert.setContentText("you didnt insert query");
+            alert.setContentText("thers no dictionary in the memory\n please load dictionary first");
             alert.initStyle(StageStyle.UTILITY);
             alert.showAndWait();
-        } else if ((!MultyQuery.getText().trim().isEmpty() && Query.getText().trim().isEmpty()) ||
-                (MultyQuery.getText().trim().isEmpty() && !Query.getText().trim().isEmpty())) {
 
-            if (!Query.getText().trim().isEmpty()) {
-                myViewModel.runQuery(true, Query.getText());
-            } else { // multy query
-                myViewModel.runQuery(false, MultyQuery.getText());
+        } else {
+            if (MultyQuery.getText().trim().isEmpty() && Query.getText().trim().isEmpty()) {// || Query.getText().trim().isEmpty())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("you didnt insert query");
+                alert.initStyle(StageStyle.UTILITY);
+                alert.showAndWait();
+            } else if ((!MultyQuery.getText().trim().isEmpty() && Query.getText().trim().isEmpty()) ||
+                    (MultyQuery.getText().trim().isEmpty() && !Query.getText().trim().isEmpty())) {
+
+                if (!Query.getText().trim().isEmpty()) {
+                    myViewModel.runQuery(true, Query.getText());
+                } else { // multy query
+                    myViewModel.runQuery(false, MultyQuery.getText());
+                }
+
+                Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                alert2.setTitle("Query");
+                alert2.setHeaderText(null);
+                alert2.setContentText("finish query, you can watch result now");
+                alert2.showAndWait();
+
+            } else if (!MultyQuery.getText().trim().isEmpty() && !Query.getText().trim().isEmpty()) {//|| !Query.getText().trim().isEmpty())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("yot cannot insert two queries");
+                alert.initStyle(StageStyle.UTILITY);
+                alert.showAndWait();
+
             }
-
-            Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
-            alert2.setTitle("Query");
-            alert2.setHeaderText(null);
-            alert2.setContentText("finish query, you can watch result now");
-            alert2.showAndWait();
-
-        } else if (!MultyQuery.getText().trim().isEmpty() && !Query.getText().trim().isEmpty()) {//|| !Query.getText().trim().isEmpty())) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("yot cannot insert two queries");
-            alert.initStyle(StageStyle.UTILITY);
-            alert.showAndWait();
-
         }
     }
 
@@ -339,9 +348,9 @@ public class ViewController implements Observer {
                 try {
 
                     String pathToSave = (myViewModel.getSemanticTreatment()) ? path + "\\qr_semantic" : path + "\\qr";
-                    String p2 = (myViewModel.getIsStem()) ? pathToSave+"_stem" : pathToSave;
-                    String p4 = (myViewModel.getIsApiSyn()) ? p2+"_APIsyn" : p2;
-                    String p3 = p4+".txt";
+                    String p2 = (myViewModel.getIsStem()) ? pathToSave + "_stem" : pathToSave;
+                    String p4 = (myViewModel.getIsApiSyn()) ? p2 + "_APIsyn" : p2;
+                    String p3 = p4 + ".txt";
                     BufferedWriter bwr = new BufferedWriter(new FileWriter(new File(p3)));
 
                     //write contents of StringBuffer to a file
@@ -417,7 +426,7 @@ public class ViewController implements Observer {
                     actionEvent.consume();
                     return;
                 }
-            }else{
+            } else {
                 myViewModel.setCorpusPath(corpus_path.getText());
             }
             TableView myTable = new TableView();
@@ -428,8 +437,8 @@ public class ViewController implements Observer {
             column1.setCellValueFactory(new PropertyValueFactory<>("qu"));
             column2.setCellValueFactory(new PropertyValueFactory<>("rate"));
             column3.setCellValueFactory(new PropertyValueFactory<>("docName"));
-            myTable.setMinHeight(600);
-            /* ScrollBar sbv = new ScrollBar();
+
+            /* ScrollBar sbv = new ScrollBar();myTable.setMinHeight(600);
             sbv.setOrientation(Orientation.VERTICAL);
             sbv.visibleProperty();
             VBox table  = new VBox(myTable, sbv);*/
@@ -443,7 +452,7 @@ public class ViewController implements Observer {
             myTable.getColumns().add(column3);
             myTable.setEditable(true);
             //myTable.getSelectionModel().setCellSelectionEnabled(true);
-          //  myTable.getSelectionModel();
+            //  myTable.getSelectionModel();
 
             for (Map.Entry<String, List<Pair<String, Double>>> entry : queryResult.entrySet()) {
                 int i = 1;
@@ -482,20 +491,20 @@ public class ViewController implements Observer {
                     String docName = olist.get(0).getdocName();
                     //System.out.println(docName);
                     String ans = myViewModel.showEntitySearch(docName).toString();
-                   // Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
-                   // alert2.setTitle("Top5 Entity");
-                   // alert2.setHeaderText(null);
-                   // alert2.setContentText(ans);
-                   // alert2.showAndWait();
+                    // Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                    // alert2.setTitle("Top5 Entity");
+                    // alert2.setHeaderText(null);
+                    // alert2.setContentText(ans);
+                    // alert2.showAndWait();
                     Label docn = new Label(docName);
                     docn.setTextFill(Color.BLACK);
-                    docn.setFont(Font.font("Verdana",  FontWeight.BOLD,14));
+                    docn.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
                     docn.setUnderline(true);
                     Label label3 = new Label(ans);
                     label3.setTextFill(Color.BLACK);
                     label3.setFont(Font.font("Verdana", 14));
                     VBox TOP5 = new VBox();
-                    TOP5.getChildren().addAll(docn,label3);
+                    TOP5.getChildren().addAll(docn, label3);
                     TOP5.setAlignment(Pos.CENTER_LEFT);
                     TOP5.setSpacing(5);
                     TOP5.setPadding(new Insets(10, 10, 0, 10));
@@ -506,9 +515,7 @@ public class ViewController implements Observer {
                     stage2.setScene(scene2);
                     stage2.setTitle("Top5 Entity");
                     stage2.show();
-                }
-
-                else{
+                } else {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
                     alert.setHeaderText(null);

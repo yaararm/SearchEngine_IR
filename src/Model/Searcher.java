@@ -213,7 +213,7 @@ public class Searcher {
             while (!(line = br.readLine()).matches(term + ":\\d+")) {
 
             }
-            System.out.println(line);
+            //System.out.println(line);
             int df = Integer.valueOf(line.split(":")[1]);
             //System.out.println(df);
             for (int i = 0; i < df; i++) {

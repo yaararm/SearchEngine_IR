@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class HttpURLConnectionExample {
 
-   // private final String USER_AGENT = "Mozilla/5.0";
+    private final String USER_AGENT = "Mozilla/5.0";
 
     public static void main(String[] args) throws Exception {
         //getIdentical("car");
@@ -68,10 +68,11 @@ public class HttpURLConnectionExample {
         System.out.println(arr.length+" words");
        for (String st : arr) {
            hash_Set.add(st);
+           //getIdentical(s);
         }
 
         Set <String> ans = af.getSetOfQuery(hash_Set);
-        System.out.println(Arrays.toString(ans.toArray()));
+       System.out.println(Arrays.toString(ans.toArray()));
         System.out.println(ans.size());
 
     }
@@ -79,7 +80,7 @@ public class HttpURLConnectionExample {
 
     // word and score attributes are from DataMuse API
 
-
+/*
     private static Pair<String, Double> getIdentical(String s) throws Exception {
 
         final String USER_AGENT = "Mozilla/5.0";
@@ -123,7 +124,7 @@ public class HttpURLConnectionExample {
         }
         return null;
     }
-
+/*
     public static class URLConnectionReader {
 
         public static void main(String[] args) throws Exception {
@@ -139,4 +140,5 @@ public class HttpURLConnectionExample {
             in.close();
         }
     }
+    */
 }
