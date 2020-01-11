@@ -75,42 +75,77 @@ public class ViewModel extends Observable implements Observer {
     }
 
 
-
+    /**
+     * set use word2vec
+     * @param withSemnatic
+     */
     public void semanticTreatment(boolean withSemnatic) {
         myModel.semanticTreatment(withSemnatic);
     }
 
+    /**
+     * start the retrieval process
+     * @param b
+     * @param q
+     */
     public void runQuery(boolean b, String q) {
         myModel.runQuery(b,q);
     }
 
+    /**
+     * set the use in synonym api
+     * @param is_click
+     */
     public void API_synonym(boolean is_click) {
         myModel.is_API_synonym(is_click);
     }
 
+    /**
+     *
+     * @return query result
+     */
     public HashMap<String, List<Pair<String,Double>>> getResult() {
          return myModel.getResult();
     }
 
-    public void getFile(){
-      //  return myModel.getFile();
-    }
-
+    /**
+     *
+     * @return query result in string for saving file
+     */
     public StringBuilder queryToString() {
         return myModel.queryToString();
     }
+
+    /**
+     *
+     * @param docname
+     * @return the top5 entity of doc
+     */
     public StringBuilder showEntitySearch(String docname){
 
         return myModel.showEntitySearch(docname);
     }
+
+    /**
+     *
+     * @return true get if there is use in word2vec model
+     */
     public boolean getSemanticTreatment(){
        return myModel.getSemanticTreatment();
     }
 
+    /**
+     *
+     * @return true- if there is use in stemming
+     */
     public boolean getIsStem() {
         return myModel.getIsStem();
     }
 
+    /**
+     *
+     * @return true if there is use in api synonym
+     */
     public boolean getIsApiSyn() {
       return  myModel.getIsAPIsyn();
 

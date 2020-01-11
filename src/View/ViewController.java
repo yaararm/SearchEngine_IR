@@ -14,6 +14,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -247,7 +248,10 @@ public class ViewController implements Observer {
 
     //region PartB
 
-
+    /**
+     * this method set use of word2vec model
+     * @param actionEvent
+     */
     public void semanticTreatment(ActionEvent actionEvent) {
         if (SemanticTreatment.isSelected()) {
             myViewModel.semanticTreatment(true);
@@ -258,6 +262,10 @@ public class ViewController implements Observer {
 
     }
 
+    /**
+     * this function set the multy query path file
+     * @param actionEvent
+     */
     public void brows_for_multy_query(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("select the queries file");
@@ -280,6 +288,10 @@ public class ViewController implements Observer {
 
     }
 
+    /**
+     * this method set semantic synonym api use
+     *  @param actionEvent
+     */
     public void is_API_synonym(ActionEvent actionEvent) {
         if (API_synonym.isSelected()) {
             myViewModel.API_synonym(true);
@@ -289,6 +301,10 @@ public class ViewController implements Observer {
 
     }
 
+    /**
+     * this function start the retrieval process
+     * @param actionEvent
+     */
     public void runQuery(ActionEvent actionEvent) {
 
         if (myViewModel.getDictionary().isEmpty()) {
@@ -334,6 +350,10 @@ public class ViewController implements Observer {
         }
     }
 
+    /**
+     * this function save the results of query
+     * @param actionEvent
+     */
     public void save_result(ActionEvent actionEvent) {
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -392,6 +412,10 @@ public class ViewController implements Observer {
 
     }
 
+    /**
+     * this function show to user the query result
+     * @param actionEvent
+     */
     public void show_result(ActionEvent actionEvent) {
 
         HashMap<String, List<Pair<String, Double>>> queryResult = myViewModel.getResult();
@@ -439,10 +463,7 @@ public class ViewController implements Observer {
             column2.setCellValueFactory(new PropertyValueFactory<>("rate"));
             column3.setCellValueFactory(new PropertyValueFactory<>("docName"));
 
-            /* ScrollBar sbv = new ScrollBar();myTable.setMinHeight(600);
-            sbv.setOrientation(Orientation.VERTICAL);
-            sbv.visibleProperty();
-            VBox table  = new VBox(myTable, sbv);*/
+
             ScrollPane sp = new ScrollPane(myTable);
             sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
             myTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -452,6 +473,7 @@ public class ViewController implements Observer {
             myTable.getColumns().add(column2);
             myTable.getColumns().add(column3);
             myTable.setEditable(true);
+            myTable.setMinHeight(350);
             //myTable.getSelectionModel().setCellSelectionEnabled(true);
             //  myTable.getSelectionModel();
 
@@ -527,23 +549,21 @@ public class ViewController implements Observer {
             });
 
             VBox select = new VBox();
+            select.setPadding(new Insets(10, 10, 20, 10));
             select.getChildren().addAll(label2, show);
             select.setAlignment(Pos.CENTER);
+            //select.setMaxHeight(200);
 
-            // HBox buttonHb = new HBox();
-            // buttonHb.setSpacing(3);
-            // buttonHb.setAlignment(Pos.CENTER);
-            // buttonHb.getChildren().add(select);
+
 //-----------------------------put them all together---------------------------
-            VBox vbox = new VBox();
-            vbox.setSpacing(5);
-            vbox.setPadding(new Insets(10, 10, 0, 10));
-            //vbox.setPadding(new Insets(25, 25, 25, 25));
-            vbox.getChildren().addAll(labelHb, myTable, select);
-            String style = "-fx-background-color: rgba(72,174,176,0.87);";
-            vbox.setStyle(style);
-            // StackPane sp = new StackPane(buttonHb,myTable,label);
-            Scene scene = new Scene(vbox, 500, 800);
+
+            BorderPane bp = new BorderPane();
+            bp.setPadding(new Insets(10, 10, 0, 10));
+            bp.setTop(labelHb);
+            bp.setCenter(myTable);
+            bp.setBottom(select);
+            bp.setStyle("-fx-background-color: rgba(72,174,176,0.87);");
+            Scene scene = new Scene(bp, 500, 800);
             Stage stage = new Stage();
             stage.setScene(scene);
             stage.setTitle("Query results");
@@ -597,6 +617,9 @@ public class ViewController implements Observer {
         }
     }
 
+    /**
+     * this class represent the table view for query result
+     */
     public static class rankScore {
         private SimpleIntegerProperty rate;
         private SimpleStringProperty docName;

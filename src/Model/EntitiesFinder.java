@@ -1,3 +1,6 @@
+/**
+ * this class reswponsible to find the entities of specific document
+ */
 package Model;
 
 import javafx.util.Pair;
@@ -27,6 +30,11 @@ public class EntitiesFinder {
         this.tp = new TextParse();
     }
 
+    /**
+     *
+     * @param docID
+     * @return this function return top5 entity for the given docID
+     */
     public List<Pair<String, Double>> getTop5Entities(String docID) {
 
         String docName = getDocName(docID);
@@ -61,6 +69,11 @@ public class EntitiesFinder {
         } else return sortedEntities;
     }
 
+    /**
+     *
+     * @param entities
+     * @return this function rate the entities of the document
+     */
     private Hashtable<String, Double> rankEntities(Hashtable<String, Integer> entities) {
         Hashtable<String, Double> ans = new Hashtable<>();
 
@@ -89,6 +102,12 @@ public class EntitiesFinder {
         return ans;
     }
 
+    /**
+     *
+     * @param f
+     * @param docName
+     * @return this function
+     */
     private String getDocText(File f, String docName) {
 
         StringBuilder rawFileAsString = getFileAsText(f);
@@ -109,6 +128,11 @@ public class EntitiesFinder {
         return text;
     }
 
+    /**
+     *
+     * @param f
+     * @return the file as string
+     */
     private StringBuilder getFileAsText(File f) {
         StringBuilder res = new StringBuilder();
 
@@ -142,6 +166,11 @@ public class EntitiesFinder {
         return output.trim();
     }
 
+    /**
+     *
+     * @param map
+     * @return  all the entitie of the document sort in decreasing order
+     */
     private static List<Pair<String, Double>> sortHashTable(Hashtable<String, Double> map) {
         List<Pair<String, Double>> values = new ArrayList<>();
         map.forEach((k, v) -> values.add(new Pair<>(k, v)));
@@ -153,6 +182,11 @@ public class EntitiesFinder {
         return values;
     }
 
+    /**
+     *
+     * @param docName
+     * @return the original from the corpus data set
+     */
     private File findDocFile(String docName) {
 
         try (Stream<Path> walk = Files.walk(Paths.get(Model.corpus_Path))) {

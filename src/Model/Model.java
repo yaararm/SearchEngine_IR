@@ -46,7 +46,7 @@ public class Model extends Observable {
     public Model() {
 
     }
-
+    //region PartA
     /**
      * this function start the creation of the inverted index
      */
@@ -470,15 +470,31 @@ public class Model extends Observable {
         }
 
     }
+//endregion
 
+    //region Part B
+
+    /**
+     * set use in synonym api
+     * @param is_click
+     */
     public void is_API_synonym(boolean is_click) {
         is_API_synonym = is_click;
     }
 
+    /**
+     * set use in word2vec model
+     * @param isSemantic
+     */
     public void semanticTreatment(boolean isSemantic) {
         isSemanticTreatment = isSemantic;
     }
 
+    /**
+     * this method start to query search
+     * @param isOneQuery
+     * @param q
+     */
     public void runQuery(boolean isOneQuery, String q) {
         fromDocNameToDocID = new HashMap<>();
         if (isOneQuery) {
@@ -518,6 +534,11 @@ public class Model extends Observable {
         }
     }
 
+    /**
+     * this method parse the query file and split all the queries
+     * @param path
+     * @return all the query with description
+     */
     private HashMap<String, Pair<String, String>> parseMultiQuery(String path) {
         File multiQuery = new File(path); // current directory
         LinkedHashMap<String, Pair<String, String>> extractQuery = new LinkedHashMap<>();
@@ -572,6 +593,11 @@ public class Model extends Observable {
         return extractQuery;
     }
 
+    /**
+     *
+     * @param desc
+     * @return the description of the query without unnecessary words
+     */
     private String cleanDescription(String desc) {
 
         if (desc.toLowerCase().contains("identify documents that discuss")) {
@@ -593,6 +619,10 @@ public class Model extends Observable {
         return desc;
     }
 
+    /**
+     * this function sort the query result
+     * @return
+     */
     private HashMap<String, List<Pair<String, Double>>> sortAndUpdateResult() {
 
         HashMap<String, List<Pair<String, Double>>> ansQuery = new HashMap<String, List<Pair<String, Double>>>();
@@ -620,6 +650,11 @@ public class Model extends Observable {
 
     }
 
+    /**
+     *
+     * @param docName
+     * @return top 5 entity of the current document
+     */
     public StringBuilder showEntitySearch(String docName) {
         StringBuilder ans = new StringBuilder();
         //ans.append(docName + ":\n\n");
@@ -638,6 +673,10 @@ public class Model extends Observable {
 
     }
 
+    /**
+     *
+     * @return the query result as string
+     */
     public StringBuilder queryToString() {
 
         StringBuilder ans = new StringBuilder();
@@ -657,9 +696,14 @@ public class Model extends Observable {
         return null;
     }
 
+    /**
+     *
+     * @return the query result
+     */
     public HashMap<String, List<Pair<String, Double>>> getResult() {
         return sortedResultDocName;
     }
+
 
     public boolean getSemanticTreatment() {
         return isSemanticTreatment;
@@ -672,6 +716,6 @@ public class Model extends Observable {
     public boolean getIsAPIsyn() {
         return is_API_synonym;
     }
-
+//endregion
 
 }

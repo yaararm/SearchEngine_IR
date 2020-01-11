@@ -1,3 +1,6 @@
+/**
+ * this class use word2vec model from medallia/github to find related word to query words
+ */
 package Model;
 
 import com.medallia.word2vec.Searcher;
@@ -26,12 +29,17 @@ public class Word2Vec {
         }
     }
 
+    /**
+     * this method return set of related words to input set of word
+     * @param queryWords
+     * @return
+     */
     public Set<String> getSimilarTerms(Set<String> queryWords) {
         List<Pair<String, Double>> similarTerms = new ArrayList<>();
         Set<String> ans = new HashSet<>();
         for (String term : queryWords) {
             try {
-                List<Match> matches = model.forSearch().getMatches(term, 5);
+                List<Match> matches = model.forSearch().getMatches(term.toLowerCase(), 5);
                 for (Match m : matches) {
                     String matchWord = m.match();
                     double cosineDist = m.distance();
