@@ -19,9 +19,16 @@ public class Ranker {
 
     private final double k1 = 1.8;
     private final double b = 0.95;
-    private final double BM25_QUERY_WEIGHT = 0.5;
-    private final double BM25_DESCRIPTION_WEIGHT = 0.2;
-    private final double TITLE_WEIGHT = 0.3;
+    private final double BM25_QUERY_WEIGHT = 0.4;
+    private final double BM25_DESCRIPTION_WEIGHT =0.4;
+    private final double TITLE_WEIGHT = 0.2;
+
+    //0.5,0.5,0 = 178,0.58,0.213,0.178
+    //0.4,0.6,0 = 175,0.51,0.16,0.18
+    //0.6,0.4,0 = 177,0.54,0.24,0.18
+    //0.4,0.4,0.2 = 180,0.54,0.17,0.195 !!!!!!!!!!!!!! best
+    //0.3,0.35,0.35 =178,0.47,0.14,0.15
+
 
 
     Ranker() {
