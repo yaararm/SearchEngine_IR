@@ -3,7 +3,6 @@
  */
 package View;
 
-import Model.Model;
 import ViewModel.ViewModel;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -27,7 +26,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
 
-import javax.swing.text.StyledEditorKit;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -155,21 +153,14 @@ public class ViewController implements Observer {
             Optional<ButtonType> result = alert4.showAndWait();
             if (result.get() == ButtonType.OK) {
                 //user chose OK
-                boolean b = myViewModel.resetProcess();
-                if (b) { //deleted
+                int wahtWasDeleted = myViewModel.resetProcess();
+                String[]  optAnswers = {"Didn't found anything to delete","Program memory has been cleaned","Posting Files has been removed from disk","Program memory has been cleaned\nPosting Files has been removed from disk"};
                     Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
                     alert2.setTitle("Reset");
                     alert2.setHeaderText(null);
-                    alert2.setContentText("Posting files have been deleted successfully");
+                    alert2.setContentText(optAnswers[wahtWasDeleted]);
                     alert2.showAndWait();
-                } else {
-                    Alert alert3 = new Alert(Alert.AlertType.ERROR);
-                    alert3.setTitle("Error");
-                    alert3.setHeaderText(null);
-                    alert3.setContentText("Could not find Posting Files to delete in this path");
-                    alert3.initStyle(StageStyle.UTILITY);
-                    alert3.showAndWait();
-                }
+
             } else {
                 //user chose CANCEL or closed the dialog
                 actionEvent.consume();
@@ -276,7 +267,6 @@ public class ViewController implements Observer {
             path = file.toPath().toString();
             MultyQuery.setText(path);
             //Query.setDisable(true);
-            myViewModel.set_file_for_multy_query(path);
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -649,59 +639,6 @@ public class ViewController implements Observer {
 
     }
 
-    public static class entitylist {
-        private SimpleStringProperty doc;
-        private SimpleStringProperty entitys;
 
-        public entitylist(String doc, String entitys) {
-
-            this.doc = new SimpleStringProperty(doc);
-            this.entitys = new SimpleStringProperty(entitys);
-
-        }
-
-        public SimpleStringProperty docProperty() {
-            return doc;
-        }
-
-        public SimpleStringProperty entitysProperty() {
-            return entitys;
-        }
-
-        public String getdoc() {
-            return doc.get();
-        }
-
-        public String getentitys() {
-            return entitys.get();
-        }
-
-        public void setdoc(String doc) {
-            this.doc.set(doc);
-        }
-
-        public void setentitys(String entitys) {
-            this.entitys.set(entitys);
-        }
-    }
-/*
-    private class AddButtonListener implements EventHandler<ActionEvent> {
-        @Override
-        public void handle(ActionEvent e) {
-/*
-            // Create a new row after last row
-            Book book = new Book("...", "...");
-            data.add(book);
-            int row = data.size() - 1;
-
-            // Select the new row
-            table.requestFocus();
-            table.getSelectionModel().select(row);
-            table.getFocusModel().focus(row);
-
-            actionStatus.setText("New book: Enter title and author. Press .");
-        }
-    }
-    */
 }
 

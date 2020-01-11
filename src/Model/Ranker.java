@@ -20,7 +20,7 @@ public class Ranker {
     private final double k1 = 1.8;
     private final double b = 0.95;
     private final double BM25_QUERY_WEIGHT = 0.4;
-    private final double BM25_DESCRIPTION_WEIGHT =0.4;
+    private final double BM25_DESCRIPTION_WEIGHT = 0.4;
     private final double TITLE_WEIGHT = 0.2;
 
     //0.5,0.5,0 = 178,0.58,0.213,0.178
@@ -28,7 +28,6 @@ public class Ranker {
     //0.6,0.4,0 = 177,0.54,0.24,0.18
     //0.4,0.4,0.2 = 180,0.54,0.17,0.195 !!!!!!!!!!!!!! best
     //0.3,0.35,0.35 =178,0.47,0.14,0.15
-
 
 
     Ranker() {
@@ -45,21 +44,21 @@ public class Ranker {
             double queryBM25Score = rankedDocsByQueryBM25.get(docID);
             double descriptionBM25Score = (rankedDocsByDescriptionBM25.containsKey(docID)) ? rankedDocsByDescriptionBM25.get(docID) : 0;
 
-            Double totalRank = TITLE_WEIGHT*titleScore  + BM25_QUERY_WEIGHT*queryBM25Score + BM25_DESCRIPTION_WEIGHT*descriptionBM25Score;
+            Double totalRank = TITLE_WEIGHT * titleScore + BM25_QUERY_WEIGHT * queryBM25Score + BM25_DESCRIPTION_WEIGHT * descriptionBM25Score;
             rankedDocs.put(docID, totalRank);
         }
 
         //iterate over docs from description, calculate Total Rank and add it to rankedDocs
-        for (String docID : rankedDocsByDescriptionBM25.keySet())  {
+        for (String docID : rankedDocsByDescriptionBM25.keySet()) {
             //if not already calculated earlier
-            if(!rankedDocs.containsKey(docID)){
+            if (!rankedDocs.containsKey(docID)) {
                 double descriptionBM25Score = rankedDocsByDescriptionBM25.get(docID);
-                rankedDocs.put(docID, BM25_DESCRIPTION_WEIGHT*descriptionBM25Score);
+                rankedDocs.put(docID, BM25_DESCRIPTION_WEIGHT * descriptionBM25Score);
             }
         }
 
 
-        return sortRankedQurey(rankedDocs);
+        return sortRankedQuery(rankedDocs);
 
     }
 
@@ -99,8 +98,7 @@ public class Ranker {
 
     }
 
-
-    private List<Pair<String, Double>> sortRankedQurey(HashMap<String, Double> rankedDocs) {
+    private List<Pair<String, Double>> sortRankedQuery(HashMap<String, Double> rankedDocs) {
         List<Pair<String, Double>> ans = new ArrayList<Pair<String, Double>>();
         Map<String, Double> sorted = rankedDocs
                 .entrySet()
@@ -159,11 +157,14 @@ public class Ranker {
     }
 
     private void NormalizeBM25Score(HashMap<String, Double> rankedDocsBM25) {
-        double maxRankBM25 = Collections.max(rankedDocsBM25.values());
+        if (!rankedDocsBM25.isEmpty()) {
 
-        for (String docID : rankedDocsBM25.keySet()) {
-            Double normRank = rankedDocsBM25.get(docID) / maxRankBM25;
-            rankedDocsBM25.put(docID, normRank);
+            double maxRankBM25 = Collections.max(rankedDocsBM25.values());
+
+            for (String docID : rankedDocsBM25.keySet()) {
+                Double normRank = rankedDocsBM25.get(docID) / maxRankBM25;
+                rankedDocsBM25.put(docID, normRank);
+            }
         }
     }
 }

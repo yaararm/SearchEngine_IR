@@ -48,7 +48,7 @@ public class ViewModel extends Observable implements Observer {
      * this function trigger the reset processing in the model
      * @return true if all the memory deleted
      */
-    public boolean resetProcess() {
+    public int resetProcess() {
         return myModel.resetProcess();
     }
 
@@ -88,10 +88,6 @@ public class ViewModel extends Observable implements Observer {
         myModel.is_API_synonym(is_click);
     }
 
-    public void set_file_for_multy_query(String file) {
-        myModel.set_file_for_multy_query(file);
-    }
-
     public HashMap<String, List<Pair<String,Double>>> getResult() {
          return myModel.getResult();
     }
@@ -116,7 +112,7 @@ public class ViewModel extends Observable implements Observer {
     }
 
     public boolean getIsApiSyn() {
-      return  myModel.getISApisyn();
+      return  myModel.getIsAPIsyn();
 
     }
 }
