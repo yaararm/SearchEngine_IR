@@ -16,10 +16,12 @@ public class Searcher {
     private Ranker ranker;
     private SynonymFinder synonymFinder;
     private Word2Vec w2v;
-
     private String posting_Path;
+
     //              DocId               tf       df
-    private HashMap<String, List<Pair<Integer, Integer>>> relevantDocs = new HashMap<>();
+    private HashMap<String, List<Pair<Integer, Integer>>> relevantQueryDocs = new HashMap<>();
+    private HashMap<String, List<Pair<Integer, Integer>>> relevantQueryDescriptionDocs = new HashMap<>();
+
     private Set<String> currentQueryTerms = new HashSet<>();
 
 
@@ -31,15 +33,35 @@ public class Searcher {
         w2v = new Word2Vec();
     }
 
-    public List<Pair<String, Double>> getRankedDocsFromQuery(String query) {
+    public List<Pair<String, Double>> getRankedDocsFromQuery(String query,String queryDescription) {
+        //process query and query description
         updateRelevantDocsToRankFromQuery(query);
-        List<Pair<String, Double>> rankedDocs = ranker.caclculateRateTDoc(relevantDocs, currentQueryTerms);
-        return rankedDocs;
+        updateRelevantDocsToRankFromDescription(queryDescription);
+
+        //calculate docs score for query and query description
+        ranker.calculateQuery(relevantQueryDocs, currentQueryTerms);
+        ranker.calculateQueryDescription(relevantQueryDescriptionDocs);
+
+        return ranker.getRankedDocs();
+    }
+
+    private void updateRelevantDocsToRankFromDescription(String queryDescription) {
+        relevantQueryDescriptionDocs = new HashMap<>();
+
+        //parse description
+        qParser.parseText(queryDescription, isStem);
+
+        //get terms and entities from parsed query
+        Set<String> queryTerms = getCurrentQueryTerms();
+        Set<String> queryEntities = getQueryEntities();
+
+        readTermsInPostingToDict(queryTerms,queryEntities,false);
+
     }
 
     private void updateRelevantDocsToRankFromQuery(String query) {
         //init relevant docs hash map for this query
-        relevantDocs = new HashMap<>();
+        relevantQueryDocs = new HashMap<>();
         currentQueryTerms = new HashSet<>();
 
         //parse query
@@ -76,56 +98,65 @@ public class Searcher {
             allTermsToCalculate.addAll(synonymousTerms);
         }
 
+        readTermsInPostingToDict(allTermsToCalculate,queryEntities,true);
+
+
+
+
+
+        // relevantQueryDocs DS is now updated!
+    }
+
+    private void readTermsInPostingToDict(Set<String> terms,Set<String> entities ,boolean isQuery) {
         //read relevant posting file and extract their data
+
         //region handle regular terms:
-        for (String term : allTermsToCalculate) {
-            this.currentQueryTerms.add(term);
+        for (String term : terms) {
+            if(isQuery) this.currentQueryTerms.add(term);
             term = findTermCaseInDic(term);
             if (term != null) {
                 //get data for this term
                 HashMap<String, Pair<Integer, Integer>> termData = readTermDataFromPosting(term);
                 //insert data into relevant doc DS
-                insertDataToRelevantDocsDS(termData);
+                insertDataToRelevantDocsDS(termData,isQuery);
             }
         }
         //endregion
 
         //region handle Entities
-        for (String entity : queryEntities) {
-            List<String> terms = findEntityCaseInDic(entity);
-            for (String term : terms) {
-                this.currentQueryTerms.add(term);
+        for (String entity : entities) {
+            List<String> termsFromEntities = findEntityCaseInDic(entity);
+            for (String term : termsFromEntities) {
+                if(isQuery) this.currentQueryTerms.add(term);
                 if (term != null) {
                     HashMap<String, Pair<Integer, Integer>> termData = readTermDataFromPosting(term);
-                    insertDataToRelevantDocsDS(termData);
+                    insertDataToRelevantDocsDS(termData,isQuery);
                 }
             }
 
 
         }
         //endregion
-
-
-
-        // relevantDocs DS is now updated!
     }
 
     private Set<String> getSynonymousTerms(Set<String> queryTerms) {
         return synonymFinder.getSetOfQuery(queryTerms);
     }
 
-    private void insertDataToRelevantDocsDS(HashMap<String, Pair<Integer, Integer>> termData) {
+    private void insertDataToRelevantDocsDS(HashMap<String, Pair<Integer, Integer>> termData, boolean isQuery) {
         for (Map.Entry<String, Pair<Integer, Integer>> entry : termData.entrySet()) {
             String docID = entry.getKey();
             Pair<Integer, Integer> tfdf = entry.getValue();
 
+            HashMap<String, List<Pair<Integer, Integer>>> relevantDict = (isQuery) ? relevantQueryDocs:relevantQueryDescriptionDocs;
             //add data from this term to all relevant docs DS
-            if (relevantDocs.containsKey(docID)) { //docId exist
-                relevantDocs.get(docID).add(tfdf);
+
+            if (relevantDict.containsKey(docID)) { //docId exist
+                relevantDict.get(docID).add(tfdf);
             } else { //add new relevant doc
                 List<Pair<Integer, Integer>> newList = new ArrayList<>();
                 newList.add(tfdf);
-                relevantDocs.put(docID, newList);
+                relevantDict.put(docID, newList);
             }
 
         }

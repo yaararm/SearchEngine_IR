@@ -11,14 +11,17 @@ public class Ranker {
     private double avgDoclength;
 
     private double numOfDocumnetInCorpus;
-    private HashMap<String, Double> rankedDocsBM25 = new HashMap<>();
+    private HashMap<String, Double> rankedDocsByQueryBM25 = new HashMap<>();
     private HashMap<String, Double> rankedDocsTitle = new HashMap<>();
-    public HashMap<String, Double> rankedDocs = new HashMap<>();
+    private HashMap<String, Double> rankedDocsByDescriptionBM25 = new HashMap<>();
 
-    private final double k1 = 1.2;
-    private final double b = 0.75;
-    private final double BM25_WEIGHT = 0.9;
-    private final double TITLE_WEIGHT = 0.1;
+    private HashMap<String, Double> rankedDocs = new HashMap<>();
+
+    private final double k1 = 1.8;
+    private final double b = 0.95;
+    private final double BM25_QUERY_WEIGHT = 0.5;
+    private final double BM25_DESCRIPTION_WEIGHT = 0.2;
+    private final double TITLE_WEIGHT = 0.3;
 
 
     Ranker() {
@@ -27,51 +30,67 @@ public class Ranker {
 
     }
 
-    private double calculate_average_length() {
-        double avg = 0;
-        for (DocInfo value : Model.docs.values()) {
-            avg += avg + value.getUniqeWords();
-        }
-        return avg / numOfDocumnetInCorpus;
-    }
+    public List<Pair<String, Double>> getRankedDocs() {
 
-    public List<Pair<String, Double>> caclculateRateTDoc(HashMap<String, List<Pair<Integer, Integer>>> relevantdoc, Set<String> queryTerms) {
+        //iterate over docs from query, calculate Total Rank and add it to rankedDocs
+        for (String docID : rankedDocsByQueryBM25.keySet()) {
+            double titleScore = rankedDocsTitle.get(docID);
+            double queryBM25Score = rankedDocsByQueryBM25.get(docID);
+            double descriptionBM25Score = (rankedDocsByDescriptionBM25.containsKey(docID)) ? rankedDocsByDescriptionBM25.get(docID) : 0;
 
-        rankedDocs.clear();
-        rankedDocsBM25.clear();
-        rankedDocsTitle.clear();
-
-        for (String docID : relevantdoc.keySet()) {
-
-            double bm25Rank = scoreBM25ForDoc(docID, relevantdoc.get(docID));
-            rankedDocsBM25.put(docID,bm25Rank);
-
-            double titleRank = scoreTitle(docID, queryTerms);
-            rankedDocsTitle.put(docID,titleRank);
-
-        }
-        double maxRankBM25 = Collections.max(rankedDocsBM25.values());
-
-        //Normelize bm25 values according to best score (between 0-1)
-        for (String docID:rankedDocsBM25.keySet()){
-            Double normRank = rankedDocsBM25.get(docID)/maxRankBM25;
-            rankedDocsBM25.put(docID, normRank);
-        }
-        //rankedDocsBM25.values().forEach(v -> v=v/maxRankBM25);
-
-        //iterate over docs, calculate Total Rank and add it to rankedDocs
-        for (String docID:rankedDocsBM25.keySet()){
-            Double totalRank = TITLE_WEIGHT* rankedDocsTitle.get(docID)  + BM25_WEIGHT * rankedDocsBM25.get(docID);
+            Double totalRank = TITLE_WEIGHT*titleScore  + BM25_QUERY_WEIGHT*queryBM25Score + BM25_DESCRIPTION_WEIGHT*descriptionBM25Score;
             rankedDocs.put(docID, totalRank);
         }
 
-
+        //iterate over docs from description, calculate Total Rank and add it to rankedDocs
+        for (String docID : rankedDocsByDescriptionBM25.keySet())  {
+            //if not already calculated earlier
+            if(!rankedDocs.containsKey(docID)){
+                double descriptionBM25Score = rankedDocsByDescriptionBM25.get(docID);
+                rankedDocs.put(docID, BM25_DESCRIPTION_WEIGHT*descriptionBM25Score);
+            }
+        }
 
 
         return sortRankedQurey(rankedDocs);
 
     }
 
+    public void calculateQueryDescription(HashMap<String, List<Pair<Integer, Integer>>> relevantDocs) {
+        rankedDocs.clear();
+        rankedDocsByDescriptionBM25.clear();
+
+        for (String docID : relevantDocs.keySet()) {
+
+            double bm25Rank = scoreBM25ForDoc(docID, relevantDocs.get(docID));
+            rankedDocsByDescriptionBM25.put(docID, bm25Rank);
+
+        }
+        //Normalize bm25 values according to best score (between 0-1)
+        NormalizeBM25Score(rankedDocsByDescriptionBM25);
+
+    }
+
+    public void calculateQuery(HashMap<String, List<Pair<Integer, Integer>>> relevantDocs, Set<String> queryTerms) {
+
+        rankedDocs.clear();
+        rankedDocsByQueryBM25.clear();
+        rankedDocsTitle.clear();
+
+        for (String docID : relevantDocs.keySet()) {
+
+            double bm25Rank = scoreBM25ForDoc(docID, relevantDocs.get(docID));
+            rankedDocsByQueryBM25.put(docID, bm25Rank);
+
+            double titleRank = scoreTitle(docID, queryTerms);
+            rankedDocsTitle.put(docID, titleRank);
+
+        }
+        //Normalize bm25 values according to best score (between 0-1)
+        NormalizeBM25Score(rankedDocsByQueryBM25);
+
+
+    }
 
 
     private List<Pair<String, Double>> sortRankedQurey(HashMap<String, Double> rankedDocs) {
@@ -124,17 +143,20 @@ public class Ranker {
 
     }
 
-    private double scoreDate(String docID, Set<String> queryTerms) {
-        String docTitle = Model.docs.get(docID).getTitle().toLowerCase();
-        double termsInTitleCounter = 0;
-        for (String term : queryTerms) {
-            if (docTitle.contains(term.toLowerCase()))
-                termsInTitleCounter++;
+    private double calculate_average_length() {
+        double avg = 0;
+        for (DocInfo value : Model.docs.values()) {
+            avg += avg + value.getUniqeWords();
         }
+        return avg / numOfDocumnetInCorpus;
+    }
 
-        double queryTermsInTitlePercents = termsInTitleCounter / queryTerms.size();
+    private void NormalizeBM25Score(HashMap<String, Double> rankedDocsBM25) {
+        double maxRankBM25 = Collections.max(rankedDocsBM25.values());
 
-        return queryTermsInTitlePercents;
-
+        for (String docID : rankedDocsBM25.keySet()) {
+            Double normRank = rankedDocsBM25.get(docID) / maxRankBM25;
+            rankedDocsBM25.put(docID, normRank);
+        }
     }
 }
