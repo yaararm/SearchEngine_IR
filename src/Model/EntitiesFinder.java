@@ -77,11 +77,8 @@ public class EntitiesFinder {
     private Hashtable<String, Double> rankEntities(Hashtable<String, Integer> entities) {
         Hashtable<String, Double> ans = new Hashtable<>();
 
-        int numOfEntitiesOccupancyInDoc = 0;
-        //calculate total entities occupancy in doc
-        for (int i : entities.values()) {
-            numOfEntitiesOccupancyInDoc += i;
-        }
+        //calculate max entity occupancy in doc
+        int maxEntitiesOccupancyInDoc = Collections.max(entities.values());;
 
         for (String ent : entities.keySet()) {
             double tf = new Double(entities.get(ent));
@@ -91,12 +88,13 @@ public class EntitiesFinder {
             }
 
 
-            double dominanceInDoc = tf / numOfEntitiesOccupancyInDoc;
+            double dominanceInDoc = tf / maxEntitiesOccupancyInDoc;
             double dominanceInCorpus = tf / total_tf;
             if (dominanceInCorpus > 1)
                 dominanceInCorpus = 0;
 
             double rank = 0.8 * dominanceInDoc + 0.2 * dominanceInCorpus;
+
             ans.put(ent, rank);
         }
 

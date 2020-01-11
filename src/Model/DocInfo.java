@@ -12,7 +12,7 @@ public class DocInfo implements Serializable {
     private String docID;
     private String docName;
     private int max_tf;
-    private int uniqeWords;
+    private int uniqueWords;
     private String title;
     private String date;
     private String fileName;
@@ -22,7 +22,7 @@ public class DocInfo implements Serializable {
         this.docID = docID;
         this.docName = docName;
         this.max_tf = max_tf;
-        this.uniqeWords = uniqueWords;
+        this.uniqueWords = uniqueWords;
         this.title = title;
         this.date = date;
         this.fileName = fileName;
@@ -39,8 +39,8 @@ public class DocInfo implements Serializable {
      *
      * @return num of uniqe words
      */
-    public int getUniqeWords() {
-        return uniqeWords;
+    public int getUniqueWords() {
+        return uniqueWords;
     }
 
     /**
