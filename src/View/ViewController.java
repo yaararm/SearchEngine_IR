@@ -147,14 +147,15 @@ public class ViewController implements Observer {
             Alert alert4 = new Alert(Alert.AlertType.CONFIRMATION);
             alert4.setTitle("Reset Data");
             alert4.setHeaderText(null);
-            alert4.setContentText("Are you sure you want to delete all posting files dictionaries?");
+            alert4.setContentText("Are you sure you want to delete all posting files and clean program memory?");
             alert4.initStyle(StageStyle.UTILITY);
 
             Optional<ButtonType> result = alert4.showAndWait();
             if (result.get() == ButtonType.OK) {
                 //user chose OK
                 int wahtWasDeleted = myViewModel.resetProcess();
-                String[]  optAnswers = {"Didn't found anything to delete","Program memory has been cleaned","Posting Files has been removed from disk","Program memory has been cleaned\nPosting Files has been removed from disk"};
+                String[]  optAnswers = {"Didn't found anything to delete","Program memory has been cleaned","Posting Files has been removed from disk",
+                                        "Program memory has been cleaned\nPosting Files has been removed from disk"};
                     Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
                     alert2.setTitle("Reset");
                     alert2.setHeaderText(null);

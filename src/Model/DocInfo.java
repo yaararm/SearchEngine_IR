@@ -48,7 +48,4 @@ public class DocInfo implements Serializable {
         return fileName;
     }
 
-//    public String getDate() {
-//        return date;
-//    }
 }

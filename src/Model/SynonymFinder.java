@@ -4,7 +4,6 @@ import javafx.util.Pair;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -17,9 +16,8 @@ import static java.lang.Double.parseDouble;
 public class SynonymFinder {
 
 
-    private final String USER_AGENT = "Mozilla/5.0";
-    protected double maxValue;
-    protected double rate;
+    private double maxValue;
+    private double rate;
     SynonymFinder() {
         this.maxValue=120000;
         this.rate = 0.75;
