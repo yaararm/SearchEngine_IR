@@ -128,7 +128,7 @@ public class Ranker {
             double tfN = tf / Model.docs.get(docName).getMax_tf();
             double idf = Math.log((numOfDocumnetInCorpus - (int) p.getValue() + 0.5) / ((int) p.getValue() + 0.5));
             double mone = (idf * tfN * (k1 + 1)); // IDF*TF*K+1
-            double mechane = tfN + (k1 * (1 - b + (b * ((Model.docs.get(docName).getUniqeWords()) / avgDoclength)))); // TF+k1* (1-b+b*(lenD/avgDoclength))
+            double mechane = tfN + (k1 * (1 - b + (b * ((Model.docs.get(docName).getUniqueWords()) / avgDoclength)))); // TF+k1* (1-b+b*(lenD/avgDoclength))
             score += mone / mechane;
         }
         return score;
@@ -151,7 +151,7 @@ public class Ranker {
     private double calculate_average_length() {
         double avg = 0;
         for (DocInfo value : Model.docs.values()) {
-            avg += avg + value.getUniqeWords();
+            avg += avg + value.getUniqueWords();
         }
         return avg / numOfDocumnetInCorpus;
     }
