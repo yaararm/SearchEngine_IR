@@ -11,9 +11,7 @@ import static java.util.stream.Collectors.toMap;
 
 public class Ranker {
 
-    private double avgDoclength;
 
-    private double numOfDocumnetInCorpus;
     private HashMap<String, Double> rankedDocsByQueryBM25 = new HashMap<>();
     private HashMap<String, Double> rankedDocsTitle = new HashMap<>();
     private HashMap<String, Double> rankedDocsByDescriptionBM25 = new HashMap<>();
@@ -25,18 +23,15 @@ public class Ranker {
     private final double BM25_QUERY_WEIGHT = 0.4;
     private final double BM25_DESCRIPTION_WEIGHT = 0.4;
     private final double TITLE_WEIGHT = 0.2;
-    private final double LAMDA = 0.4;
+    private final double LAMBDA = 0.4;
 
-    //0.5,0.5,0 = 178,0.58,0.213,0.178
-    //0.4,0.6,0 = 175,0.51,0.16,0.18
-    //0.6,0.4,0 = 177,0.54,0.24,0.18
-    //0.4,0.4,0.2 = 180,0.54,0.17,0.195 !!!!!!!!!!!!!! best
-    //0.3,0.35,0.35 =178,0.47,0.14,0.15
+    private double avgDocLength;
+    private double namOfDocumentInCorpus;
 
 
     Ranker() {
-        this.numOfDocumnetInCorpus = Model.docs.size();
-        this.avgDoclength = calculate_average_length();
+        this.namOfDocumentInCorpus = Model.docs.size();
+        this.avgDocLength = calculate_average_length();
 
     }
 
@@ -155,10 +150,10 @@ public class Ranker {
             double tf = new Double((Integer) p.getKey());
             //double tfN = tf / Model.docs.get(docName).getMax_tf();
             double tfN = tf;
-            double idf = Math.log((numOfDocumnetInCorpus - (int) p.getValue() + 0.5) / ((int) p.getValue() + 0.5));
+            double idf = Math.log((namOfDocumentInCorpus - (int) p.getValue() + 0.5) / ((int) p.getValue() + 0.5));
             double mone = ( tfN * (k1 + 1)); // IDF*TF*K+1
-            double mechane = tfN + (k1 * (1 - b + (b * ((Model.docs.get(docName).getUniqeWords()) / avgDoclength)))); // TF+k1* (1-b+b*(lenD/avgDoclength))
-            double delta = idf * ((mone/mechane)+LAMDA);
+            double mechane = tfN + (k1 * (1 - b + (b * ((Model.docs.get(docName).getUniqeWords()) / avgDocLength)))); // TF+k1* (1-b+b*(lenD/avgDocLength))
+            double delta = idf * ((mone/mechane)+ LAMBDA);
             score+= delta;
             //score += mone / mechane;
         }
@@ -194,11 +189,10 @@ public class Ranker {
         double ans = 0;
         for (DocInfo value : Model.docs.values()) {
             avg += avg + value.getUniqeWords();
-            ans+= (value.getUniqeWords()/numOfDocumnetInCorpus);
+            ans+= (value.getUniqeWords()/ namOfDocumentInCorpus);
 
         }
-       // return avg / numOfDocumnetInCorpus;
-        return 213;
+        return 215;
        // return ans;
     }
 
