@@ -1,9 +1,9 @@
 package Model;
 
+import javafx.scene.control.Alert;
 import javafx.util.Pair;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -29,9 +29,42 @@ public class HttpURLConnectionExample {
 
         http.searchSynonym(wordToSearch);
         */
-        test();
+       // test();
+        exportToCsv();
 
 
+    }
+
+    private static void exportToCsv() {
+        double k1 = 1, b = 2, qw = 3, dw = 4, tw = 5, l = 6, rate = 7;
+        StringBuilder result = new StringBuilder();
+        result.append("K,B,queryWeight,DescWeight,TitleWeight,Lamda,RET\n");
+        for (int i = 0; i < 5; i++) {
+            result.append(k1 + "," + b + "," + qw + "," + dw + "," + tw + "," + l + "," + rate + "\n");
+        }
+
+        if (result != null) {
+            try {
+
+                String pathToSave = "C:\\Users\\YAARA\\Desktop\\checkFiles" + "\\madadim.csv";
+
+                BufferedWriter bwr = new BufferedWriter(new FileWriter(new File(pathToSave)));
+
+                //write contents of StringBuffer to a file
+                bwr.write(result.toString());
+
+                //flush the stream
+                bwr.flush();
+
+                //close the stream
+                bwr.close();
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     public static void test() throws Exception {
