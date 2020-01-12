@@ -19,14 +19,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class EntitiesFinder {
-    private String posting_Path;
     private TextParse tp;
     private static final Pattern DOC_Pattern = Pattern.compile("<DOC>(.+?)</DOC>", Pattern.DOTALL),
             DOC_ID_Pattern = Pattern.compile("<DOCNO>(.+?)</DOCNO>", Pattern.DOTALL),
             TEXT_Pattern = Pattern.compile("<TEXT>(.+?)</TEXT>", Pattern.DOTALL);
 
-    public EntitiesFinder(String postingPath) {
-        this.posting_Path = postingPath;
+    public EntitiesFinder() {
         this.tp = new TextParse();
     }
 

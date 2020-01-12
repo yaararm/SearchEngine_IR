@@ -663,7 +663,7 @@ public class Model extends Observable {
         //ans.append(docName + ":\n\n");
 
         String docId = fromDocNameToDocID.get(docName);
-        EntitiesFinder ef = new EntitiesFinder(posting_Path);
+        EntitiesFinder ef = new EntitiesFinder();
         List<Pair<String, Double>> topEntities = ef.getTop5Entities(docId);
         DecimalFormat df2 = new DecimalFormat("#.###");
 
