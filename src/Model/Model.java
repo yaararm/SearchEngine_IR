@@ -530,7 +530,7 @@ public class Model extends Observable {
             }
             this.multiQueryResult = MultyQueryResult;
             this.sortedResultDocName = sortAndUpdateResult();
-            System.out.println("test");
+
 
         }
     }
