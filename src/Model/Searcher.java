@@ -44,8 +44,8 @@ public class Searcher {
      */
     public List<Pair<String, Double>> getRankedDocsFromQuery(String query,String queryDescription) {
         //process query and query description
-        updateRelevantDocsToRankFromQuery(query);
-        updateRelevantDocsToRankFromDescription(queryDescription);
+        parseQuery(query);
+        parseDescription(queryDescription);
 
         //calculate docs score for query and query description
         ranker.calculateQuery(relevantQueryDocs, currentQueryTerms);
@@ -58,7 +58,7 @@ public class Searcher {
      * this method update score of relevant docs that found with description words
      * @param queryDescription
      */
-    private void updateRelevantDocsToRankFromDescription(String queryDescription) {
+    private void parseDescription(String queryDescription) {
         relevantQueryDescriptionDocs = new HashMap<>();
 
         //parse description
@@ -76,7 +76,7 @@ public class Searcher {
      * this method update the score of each relevant doc according to user choice- word2vec model or synonym finder
      * @param query
      */
-    private void updateRelevantDocsToRankFromQuery(String query) {
+    private void parseQuery(String query) {
         //init relevant docs hash map for this query
         relevantQueryDocs = new HashMap<>();
         currentQueryTerms = new HashSet<>();
@@ -116,9 +116,6 @@ public class Searcher {
         }
 
         readTermsInPostingToDict(allTermsToCalculate,queryEntities,true);
-
-
-
 
 
         // relevantQueryDocs DS is now updated!
