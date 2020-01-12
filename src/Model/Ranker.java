@@ -25,6 +25,7 @@ public class Ranker {
     private final double BM25_QUERY_WEIGHT = 0.4;
     private final double BM25_DESCRIPTION_WEIGHT = 0.4;
     private final double TITLE_WEIGHT = 0.2;
+    private final double LAMDA = 0.4;
 
     //0.5,0.5,0 = 178,0.58,0.213,0.178
     //0.4,0.6,0 = 175,0.51,0.16,0.18
@@ -154,9 +155,11 @@ public class Ranker {
             double tf = new Double((Integer) p.getKey());
             double tfN = tf / Model.docs.get(docName).getMax_tf();
             double idf = Math.log((numOfDocumnetInCorpus - (int) p.getValue() + 0.5) / ((int) p.getValue() + 0.5));
-            double mone = (idf * tfN * (k1 + 1)); // IDF*TF*K+1
+            double mone = ( tfN * (k1 + 1)); // IDF*TF*K+1
             double mechane = tfN + (k1 * (1 - b + (b * ((Model.docs.get(docName).getUniqeWords()) / avgDoclength)))); // TF+k1* (1-b+b*(lenD/avgDoclength))
-            score += mone / mechane;
+            double delta = idf * ((mone/mechane)+LAMDA);
+            score+= delta;
+            //score += mone / mechane;
         }
         return score;
     }
@@ -194,7 +197,7 @@ public class Ranker {
     }
 
     /**
-     * normalize the bm 25 score
+     * NORMA
      * @param rankedDocsBM25
      */
     private void NormalizeBM25Score(HashMap<String, Double> rankedDocsBM25) {
