@@ -520,6 +520,7 @@ public class Model extends Observable {
             for (Map.Entry<String, Pair<String, String>> entry : MultyQuery.entrySet()) {
                 //long s = System.currentTimeMillis();
                 List<Pair<String, Double>> ans = searcher.getRankedDocsFromQuery(entry.getValue().getKey(), entry.getValue().getValue());
+                System.out.println("finish run query #"+entry.getKey());
                 // long f = System.currentTimeMillis();
                 // long dur = f - s;
                 // System.out.println(entry.getKey() + ": " + dur);
@@ -569,7 +570,7 @@ public class Model extends Observable {
 
                     }
                 }
-                if (line.contains("<desc> Description: ")) {
+                if (line.contains("<desc> Description:")) {
                     descLine = true;
 
                 }
@@ -577,7 +578,7 @@ public class Model extends Observable {
                 if (query[0].compareTo("") != 0 && query[1].compareTo("") != 0 && query[2].compareTo("") != 0 && !descLine) { // not empty
                     extractQuery.put(query[0], new Pair(query[1], query[2]));
                     // System.out.println("num: "+query[0]+" title: "+query[1]);
-                    System.out.println("desc: " + query[2]);
+                    //System.out.println("desc: " + query[2]);
                     query[1] = "";
                     query[0] = "";
                     query[2] = "";
