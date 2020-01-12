@@ -531,6 +531,7 @@ public class Model extends Observable {
             }
             this.multiQueryResult = MultyQueryResult;
             this.sortedResultDocName = sortAndUpdateResult();
+            System.out.println("test");
 
         }
     }
@@ -565,7 +566,8 @@ public class Model extends Observable {
                     if (line.contains("<narr>")) {
                         descLine = false;
                         int n = desc.indexOf("<narr>");
-                        query[2] = cleanDescription(desc.trim().substring(0, n));
+                        //query[2] = cleanDescription(desc.trim().substring(0, n));
+                        query[2] = desc.trim().substring(0, n);
                         desc = "";
 
                     }
