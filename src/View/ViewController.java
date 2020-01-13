@@ -436,8 +436,10 @@ public class ViewController implements Observer {
             alert.showAndWait();
 
         }
-        //myViewModel.setCorpusPath(corpus_path.getText());
-        myViewModel.setCorpusPath("./");
+        if (!corpus_path.getText().trim().isEmpty()) //user corpus path
+            myViewModel.setCorpusPath(corpus_path.getText());
+        else
+            myViewModel.setCorpusPath("./"); //relative
 
 
         TableView myTable = new TableView();
