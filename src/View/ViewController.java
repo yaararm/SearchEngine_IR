@@ -155,13 +155,13 @@ public class ViewController implements Observer {
             if (result.get() == ButtonType.OK) {
                 //user chose OK
                 int wahtWasDeleted = myViewModel.resetProcess();
-                String[]  optAnswers = {"Didn't found anything to delete","Program memory has been cleaned","Posting Files has been removed from disk",
-                                        "Program memory has been cleaned\nPosting Files has been removed from disk"};
-                    Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
-                    alert2.setTitle("Reset");
-                    alert2.setHeaderText(null);
-                    alert2.setContentText(optAnswers[wahtWasDeleted]);
-                    alert2.showAndWait();
+                String[] optAnswers = {"Didn't found anything to delete", "Program memory has been cleaned", "Posting Files has been removed from disk",
+                        "Program memory has been cleaned\nPosting Files has been removed from disk"};
+                Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                alert2.setTitle("Reset");
+                alert2.setHeaderText(null);
+                alert2.setContentText(optAnswers[wahtWasDeleted]);
+                alert2.showAndWait();
 
             } else {
                 //user chose CANCEL or closed the dialog
@@ -250,6 +250,7 @@ public class ViewController implements Observer {
 
     /**
      * this method set use of word2vec model
+     *
      * @param actionEvent
      */
     public void semanticTreatment(ActionEvent actionEvent) {
@@ -264,6 +265,7 @@ public class ViewController implements Observer {
 
     /**
      * this function set the multy query path file
+     *
      * @param actionEvent
      */
     public void brows_for_multy_query(ActionEvent actionEvent) {
@@ -290,7 +292,8 @@ public class ViewController implements Observer {
 
     /**
      * this method set semantic synonym api use
-     *  @param actionEvent
+     *
+     * @param actionEvent
      */
     public void is_API_synonym(ActionEvent actionEvent) {
         if (API_synonym.isSelected()) {
@@ -303,6 +306,7 @@ public class ViewController implements Observer {
 
     /**
      * this function start the retrieval process
+     *
      * @param actionEvent
      */
     public void runQuery(ActionEvent actionEvent) {
@@ -352,6 +356,7 @@ public class ViewController implements Observer {
 
     /**
      * this function save the results of query
+     *
      * @param actionEvent
      */
     public void save_result(ActionEvent actionEvent) {
@@ -414,6 +419,7 @@ public class ViewController implements Observer {
 
     /**
      * this function show to user the query result
+     *
      * @param actionEvent
      */
     public void show_result(ActionEvent actionEvent) {
@@ -429,151 +435,148 @@ public class ViewController implements Observer {
             alert.initStyle(StageStyle.UTILITY);
             alert.showAndWait();
 
-        } else {
-            // checks for enetity
-            boolean noCorpusPath = false;
-            if (corpus_path.getText().trim().isEmpty()) { // no corpus path,
-                Alert alert4 = new Alert(Alert.AlertType.CONFIRMATION);
-                alert4.setTitle("Entity Search");
-                alert4.setHeaderText(null);
-                alert4.setContentText("corpus path is necessary in order \n to watch TOP 5 entities\n Are you sure you want to continue without it?");
-                alert4.initStyle(StageStyle.UTILITY);
-
-                Optional<ButtonType> result = alert4.showAndWait();
+        }
+        //myViewModel.setCorpusPath(corpus_path.getText());
+        myViewModel.setCorpusPath("./");
 
 
-                if (result.get() == ButtonType.OK) {
-                    noCorpusPath = true;
+        TableView myTable = new TableView();
+        TableColumn<String, rankScore> column1 = new TableColumn<>("Query");
+        TableColumn<Integer, rankScore> column2 = new TableColumn<>("Rate");
+        TableColumn<String, rankScore> column3 = new TableColumn<>("DocName");
 
-                } else {
+        column1.setCellValueFactory(new PropertyValueFactory<>("qu"));
+        column2.setCellValueFactory(new PropertyValueFactory<>("rate"));
+        column3.setCellValueFactory(new PropertyValueFactory<>("docName"));
 
-                    //user chose CANCEL or closed the dialog
-                    actionEvent.consume();
-                    return;
-                }
+
+        ScrollPane sp = new ScrollPane(myTable);
+        sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        myTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+
+        myTable.getColumns().
+
+                add(column1);
+        myTable.getColumns().
+
+                add(column2);
+        myTable.getColumns().
+
+                add(column3);
+        myTable.setEditable(true);
+        myTable.setMinHeight(350);
+        //myTable.getSelectionModel().setCellSelectionEnabled(true);
+        //  myTable.getSelectionModel();
+
+        for (
+                Map.Entry<String, List<Pair<String, Double>>> entry : queryResult.entrySet()) {
+            int i = 1;
+            for (Pair p : entry.getValue()) {
+                myTable.getItems().add(new rankScore(entry.getKey(), i, (String) p.getKey()));
+                i++;
+            }
+        }
+
+        //----------------------labale--------------------------------------------
+        Label label = new Label("Query result");
+        label.setTextFill(Color.DARKBLUE);
+        label.setFont(Font.font("Calibri", FontWeight.BOLD, 36));
+        HBox labelHb = new HBox();
+        labelHb.setAlignment(Pos.CENTER);
+        labelHb.getChildren().
+
+                add(label);
+
+        //-----------------------------------------select menu-----------------
+        Label label2 = new Label("select doc name to see entity searc result");
+        label2.setTextFill(Color.DARKBLUE);
+        label2.setFont(Font.font("Calibri", FontWeight.BOLD, 20));
+
+        labelHb.setAlignment(Pos.CENTER);
+        labelHb.getChildren().
+
+                add(label2);
+
+        Button show = new Button("show Entity for Document");
+        String style1 = " -fx-text-fill: black; -fx-background-radius: 200px, 200px, 200px, 200px;  -fx-background-color: linear-gradient(#c3ffea, #46ffdd); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 )";
+        show.setStyle(style1);
+        show.setOnAction((
+                ActionEvent e) ->
+
+        {
+
+            ObservableList<rankScore> olist = myTable.getSelectionModel().getSelectedItems();
+            int index = myTable.getSelectionModel().getSelectedIndex();
+            if (!olist.isEmpty()) {
+                String docName = olist.get(0).getdocName();
+                //System.out.println(docName);
+                String ans = myViewModel.showEntitySearch(docName).toString();
+                // Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                // alert2.setTitle("Top5 Entity");
+                // alert2.setHeaderText(null);
+                // alert2.setContentText(ans);
+                // alert2.showAndWait();
+                Label docn = new Label(docName);
+                docn.setTextFill(Color.BLACK);
+                docn.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+                docn.setUnderline(true);
+                Label label3 = new Label(ans);
+                label3.setTextFill(Color.BLACK);
+                label3.setFont(Font.font("Verdana", 14));
+                VBox TOP5 = new VBox();
+                TOP5.getChildren().addAll(docn, label3);
+                TOP5.setAlignment(Pos.CENTER_LEFT);
+                TOP5.setSpacing(5);
+                TOP5.setPadding(new Insets(10, 10, 0, 10));
+                String style = "-fx-background-color: rgba(118,255,242,0.43);";
+                TOP5.setStyle(style);
+                Scene scene2 = new Scene(TOP5, 400, 200);
+                Stage stage2 = new Stage();
+                stage2.setScene(scene2);
+                stage2.setTitle("Top5 Entity");
+                stage2.show();
             } else {
-                myViewModel.setCorpusPath(corpus_path.getText());
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("you didnt choose specific row");
+                alert.initStyle(StageStyle.UTILITY);
+                alert.showAndWait();
             }
-            TableView myTable = new TableView();
-            TableColumn<String, rankScore> column1 = new TableColumn<>("Query");
-            TableColumn<Integer, rankScore> column2 = new TableColumn<>("Rate");
-            TableColumn<String, rankScore> column3 = new TableColumn<>("DocName");
+        });
 
-            column1.setCellValueFactory(new PropertyValueFactory<>("qu"));
-            column2.setCellValueFactory(new PropertyValueFactory<>("rate"));
-            column3.setCellValueFactory(new PropertyValueFactory<>("docName"));
+        VBox select = new VBox();
+        select.setPadding(new
 
+                Insets(10, 10, 20, 10));
+        select.getChildren().
 
-            ScrollPane sp = new ScrollPane(myTable);
-            sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-            myTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-
-            myTable.getColumns().add(column1);
-            myTable.getColumns().add(column2);
-            myTable.getColumns().add(column3);
-            myTable.setEditable(true);
-            myTable.setMinHeight(350);
-            //myTable.getSelectionModel().setCellSelectionEnabled(true);
-            //  myTable.getSelectionModel();
-
-            for (Map.Entry<String, List<Pair<String, Double>>> entry : queryResult.entrySet()) {
-                int i = 1;
-                for (Pair p : entry.getValue()) {
-                    myTable.getItems().add(new rankScore(entry.getKey(), i, (String) p.getKey()));
-                    i++;
-                }
-            }
-//----------------------labale--------------------------------------------
-            Label label = new Label("Query result");
-            label.setTextFill(Color.DARKBLUE);
-            label.setFont(Font.font("Calibri", FontWeight.BOLD, 36));
-            HBox labelHb = new HBox();
-            labelHb.setAlignment(Pos.CENTER);
-            labelHb.getChildren().add(label);
-//-----------------------------------------select menu-----------------
-            Label label2 = new Label("select doc name to see entity searc result");
-            label2.setTextFill(Color.DARKBLUE);
-            label2.setFont(Font.font("Calibri", FontWeight.BOLD, 20));
-
-            labelHb.setAlignment(Pos.CENTER);
-            labelHb.getChildren().add(label2);
-
-            Button show = new Button("show Entity for Document");
-            String style1 = " -fx-text-fill: black; -fx-background-radius: 200px, 200px, 200px, 200px;  -fx-background-color: linear-gradient(#c3ffea, #46ffdd); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 )";
-            show.setStyle(style1);
-            if (noCorpusPath) {
-                show.setVisible(false);
-                label2.setVisible(false);
-            }
-            show.setOnAction((ActionEvent e) -> {
-
-                ObservableList<rankScore> olist = myTable.getSelectionModel().getSelectedItems();
-                int index = myTable.getSelectionModel().getSelectedIndex();
-                if (!olist.isEmpty()) {
-                    String docName = olist.get(0).getdocName();
-                    //System.out.println(docName);
-                    String ans = myViewModel.showEntitySearch(docName).toString();
-                    // Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
-                    // alert2.setTitle("Top5 Entity");
-                    // alert2.setHeaderText(null);
-                    // alert2.setContentText(ans);
-                    // alert2.showAndWait();
-                    Label docn = new Label(docName);
-                    docn.setTextFill(Color.BLACK);
-                    docn.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
-                    docn.setUnderline(true);
-                    Label label3 = new Label(ans);
-                    label3.setTextFill(Color.BLACK);
-                    label3.setFont(Font.font("Verdana", 14));
-                    VBox TOP5 = new VBox();
-                    TOP5.getChildren().addAll(docn, label3);
-                    TOP5.setAlignment(Pos.CENTER_LEFT);
-                    TOP5.setSpacing(5);
-                    TOP5.setPadding(new Insets(10, 10, 0, 10));
-                    String style = "-fx-background-color: rgba(118,255,242,0.43);";
-                    TOP5.setStyle(style);
-                    Scene scene2 = new Scene(TOP5, 400, 200);
-                    Stage stage2 = new Stage();
-                    stage2.setScene(scene2);
-                    stage2.setTitle("Top5 Entity");
-                    stage2.show();
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText(null);
-                    alert.setContentText("you didnt choose specific row");
-                    alert.initStyle(StageStyle.UTILITY);
-                    alert.showAndWait();
-                }
-            });
-
-            VBox select = new VBox();
-            select.setPadding(new Insets(10, 10, 20, 10));
-            select.getChildren().addAll(label2, show);
-            select.setAlignment(Pos.CENTER);
-            //select.setMaxHeight(200);
+                addAll(label2, show);
+        select.setAlignment(Pos.CENTER);
+        //select.setMaxHeight(200);
 
 
 //-----------------------------put them all together---------------------------
 
-            BorderPane bp = new BorderPane();
-            bp.setPadding(new Insets(10, 10, 0, 10));
-            bp.setTop(labelHb);
-            bp.setCenter(myTable);
-            bp.setBottom(select);
-            bp.setStyle("-fx-background-color: rgba(72,174,176,0.87);");
-            Scene scene = new Scene(bp, 500, 800);
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.setTitle("Query results");
-            stage.show();
+        BorderPane bp = new BorderPane();
+        bp.setPadding(new
 
-        }
+                Insets(10, 10, 0, 10));
+        bp.setTop(labelHb);
+        bp.setCenter(myTable);
+        bp.setBottom(select);
+        bp.setStyle("-fx-background-color: rgba(72,174,176,0.87);");
+        Scene scene = new Scene(bp, 500, 800);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Query results");
+        stage.show();
+
     }
 
 
-    //endregion
+//endregion
 
     @Override
     public void update(Observable o, Object arg) {

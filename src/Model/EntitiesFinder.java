@@ -186,9 +186,13 @@ public class EntitiesFinder {
      * @return the original from the corpus data set
      */
     private File findDocFile(String docName) {
-
+        try {
+            String absolute = new File("./").getCanonicalPath();
+            System.out.println(absolute);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         try (Stream<Path> walk = Files.walk(Paths.get(Model.corpus_Path))) {
-
             List<Path> result = walk.filter(Files::isRegularFile)
                     .filter(f -> f.getFileName().toString().equals(docName))
                     .collect(Collectors.toList());
