@@ -132,7 +132,7 @@ public class Searcher {
 
         //region handle regular terms:
         for (String term : terms) {
-            if(isQuery) this.currentQueryTerms.add(term);
+            if(isQuery && term!=null) this.currentQueryTerms.add(term);
             term = findTermCaseInDic(term);
             if (term != null) {
                 //get data for this term
@@ -147,7 +147,7 @@ public class Searcher {
         for (String entity : entities) {
             List<String> termsFromEntities = findEntityCaseInDic(entity);
             for (String term : termsFromEntities) {
-                if(isQuery) this.currentQueryTerms.add(term);
+                if(isQuery && term!=null) this.currentQueryTerms.add(term);
                 if (term != null) {
                     HashMap<String, Pair<Integer, Integer>> termData = readTermDataFromPosting(term);
                     insertDataToRelevantDocsDS(termData,isQuery);
