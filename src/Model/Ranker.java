@@ -18,11 +18,11 @@ public class Ranker {
 
     private HashMap<String, Double> rankedDocs = new HashMap<>();
 
-    private final double k1 = 1.5;//1.8;
-    private final double b = 0.55;//0.95;
-    private final double LAMBDA = 0.4;//0.4;
-    private final double BM25_QUERY_WEIGHT = 0.4;
-    private final double BM25_DESCRIPTION_WEIGHT = 0.4;
+    private final double k1 = 1.5;
+    private final double b = 0.55;
+    private final double LAMBDA = 0.4;
+    private final double BM25_QUERY_WEIGHT =0.4;
+    private final double BM25_DESCRIPTION_WEIGHT =0.4;
     private final double TITLE_WEIGHT = 0.2;
 
     private double avgDocLength;

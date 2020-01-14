@@ -39,7 +39,7 @@ public class Model extends Observable {
 
     protected HashMap<String, List<Pair<String, Double>>> multiQueryResult = new HashMap<>();
     protected HashMap<String, List<Pair<String, Double>>> sortedResultDocName = new HashMap<>();
-    protected HashMap<String, String> fromDocNameToDocID= new HashMap<>();
+    protected HashMap<String, String> fromDocNameToDocID = new HashMap<>();
 
     //endregion
 
@@ -47,6 +47,7 @@ public class Model extends Observable {
 
     }
     //region PartA
+
     /**
      * this function start the creation of the inverted index
      */
@@ -262,7 +263,8 @@ public class Model extends Observable {
                     .forEach(File::delete);
             didDeletePosting = true;
         } catch (Exception e) {
-            System.out.println(e);        }
+            System.out.println(e);
+        }
 
         //-----------------delete pathes-------------------------
         posting_Path = "";
@@ -299,9 +301,9 @@ public class Model extends Observable {
 
         int wahtWasDeleted = 0;
 
-        if(didDeleteDicts && didDeletePosting) wahtWasDeleted =3;
-        else if(!didDeleteDicts && !didDeletePosting) wahtWasDeleted= 0;
-        else wahtWasDeleted= (didDeleteDicts) ? 1:2;
+        if (didDeleteDicts && didDeletePosting) wahtWasDeleted = 3;
+        else if (!didDeleteDicts && !didDeletePosting) wahtWasDeleted = 0;
+        else wahtWasDeleted = (didDeleteDicts) ? 1 : 2;
 
         //what was deleted:
         //0= nothing
@@ -476,6 +478,7 @@ public class Model extends Observable {
 
     /**
      * set use in synonym api
+     *
      * @param is_click
      */
     public void is_API_synonym(boolean is_click) {
@@ -484,6 +487,7 @@ public class Model extends Observable {
 
     /**
      * set use in word2vec model
+     *
      * @param isSemantic
      */
     public void semanticTreatment(boolean isSemantic) {
@@ -492,6 +496,7 @@ public class Model extends Observable {
 
     /**
      * this method start to query search
+     *
      * @param isOneQuery
      * @param q
      */
@@ -520,10 +525,10 @@ public class Model extends Observable {
             for (Map.Entry<String, Pair<String, String>> entry : MultyQuery.entrySet()) {
                 //long s = System.currentTimeMillis();
                 List<Pair<String, Double>> ans = searcher.getRankedDocsFromQuery(entry.getValue().getKey(), entry.getValue().getValue());
-                System.out.println("finish run query #"+entry.getKey());
-                // long f = System.currentTimeMillis();
-                // long dur = f - s;
-                // System.out.println(entry.getKey() + ": " + dur);
+                System.out.println("finish run query #" + entry.getKey());
+                //long f = System.currentTimeMillis();
+                //long dur = f - s;
+                //System.out.println(entry.getKey() + ": " + dur);
                 MultyQueryResult.put(entry.getKey(), ans);
                 for (Pair<String, Double> p : ans) {
                     fromDocNameToDocID.put((docs.get(p.getKey())).getDocName(), p.getKey());
@@ -538,6 +543,7 @@ public class Model extends Observable {
 
     /**
      * this method parse the query file and split all the queries
+     *
      * @param path
      * @return all the query with description
      */
@@ -597,7 +603,6 @@ public class Model extends Observable {
     }
 
     /**
-     *
      * @param desc
      * @return the description of the query without unnecessary words
      */
@@ -624,6 +629,7 @@ public class Model extends Observable {
 
     /**
      * this function sort the query result
+     *
      * @return
      */
     private HashMap<String, List<Pair<String, Double>>> sortAndUpdateResult() {
@@ -654,7 +660,6 @@ public class Model extends Observable {
     }
 
     /**
-     *
      * @param docName
      * @return top 5 entity of the current document
      */
@@ -677,7 +682,6 @@ public class Model extends Observable {
     }
 
     /**
-     *
      * @return the query result as string
      */
     public StringBuilder queryToString() {
@@ -700,7 +704,6 @@ public class Model extends Observable {
     }
 
     /**
-     *
      * @return the query result
      */
     public HashMap<String, List<Pair<String, Double>>> getResult() {
