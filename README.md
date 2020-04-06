@@ -23,7 +23,7 @@ project name : EngineA java version 1.8.0
 
 <img src="/Resources/se.PNG" width="500" height="550" alt="graph flow example">
 
-Part A-
+##Part A-
 Run the project jar file
 Select a corpus path in the first text area by pressing browse
 Select a posting files path
@@ -36,7 +36,8 @@ Load dictionary : will load the term dictionary to memory
 Show dictionary : shows all the unique terms in the corpus with this total tf 
 
 
-Part B-
+##Part B-
+
 Pre Query:
 Press browse button to select an index path
 If the stemming option was selected on the corpus in part A,than select the stemming option again.
@@ -46,10 +47,10 @@ Query:
 Type query in the Query text area, you can enable semantic option and press search or press browse button to select an text file path to enter some queries together, you can enable semantic option and press search button. 
 Now, wait until the searching process is finish, then press 'show result' to see the results.
 
-If you would like to choose document to see its entities, press button 'Show Entities'
+If you would like to choose document to see its entities,stand on the specific document row and press button 'Show Entities'.
 
-If you would like to save the results, press browse button near the 
-text field of 'Save the results at:' to select a path to save it, and press 'save' button.
+If you would like to save the results, press button 'save result'. 
+
 
 Post Query:
 
