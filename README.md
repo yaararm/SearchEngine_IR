@@ -46,10 +46,11 @@ Press 'load Dictionary' button to load the dictionary to the memory
 
 
 
+
 Query:
 
-Press browse button to select an text file path to enter some queries together, you can enable semantic option and press run Query. 
-
+Press browse button to select an text file path to enter some queries together, you can
+enable semantic option and press run Query. 
 
 or
 
@@ -58,6 +59,7 @@ Type query in the Query text area, you can enable semantic option and press run 
 Now, wait until the searching process is finish, then press 'show result' to see the results.
 
 If you would like to choose document to see its entities,stand on the specific document row and press button 'Show Entities'.
+
 
 
 
