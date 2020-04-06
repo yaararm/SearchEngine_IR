@@ -17,7 +17,7 @@ In addition, we create a file containing information about all the parsed docume
 
 ## INFO
 
-project name : EngineA java version 1.8.0
+project name : IR_SearchEngine java version 1.8.0
 
 ## OPERATIONS
 
@@ -44,18 +44,21 @@ If the stemming option was selected on the corpus in part A,than select the stem
 Press 'load Dictionary' button to load the dictionary to the memory
 
 Query:
-Type query in the Query text area, you can enable semantic option and press search or press browse button to select an text file path to enter some queries together, you can enable semantic option and press search button. 
+
+Press browse button to select an text file path to enter some queries together, you can enable semantic option and press run Query. 
+
+
+or
+
+Type query in the Query text area, you can enable semantic option and press run Query
+
 Now, wait until the searching process is finish, then press 'show result' to see the results.
 
 If you would like to choose document to see its entities,stand on the specific document row and press button 'Show Entities'.
 
-If you would like to save the results, press button 'save result'. 
 
 
 Post Query:
 
-Reset button : clicking this button will delete all content in the selected posting files path
+If you would like to save the results, press button 'save result'. 
 
-Load dictionary : will load the term dictionary to memory
-
-Show dictionary : shows all the unique terms in the corpus with this total tf
