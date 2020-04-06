@@ -23,7 +23,7 @@ project name : IR_SearchEngine java version 1.8.0
 
 <img src="/Resources/se.PNG" width="500" height="550" alt="graph flow example">
 
-##Part A-
+## Part A-
 Run the project jar file
 Select a corpus path in the first text area by pressing browse
 Select a posting files path
@@ -36,7 +36,7 @@ Load dictionary : will load the term dictionary to memory
 Show dictionary : shows all the unique terms in the corpus with this total tf 
 
 
-##Part B-
+## Part B-
 
 Pre Query:
 Press browse button to select an index path
