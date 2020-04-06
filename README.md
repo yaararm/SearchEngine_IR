@@ -1,5 +1,5 @@
 # SearchEngine_IR
-INTRODUCTION
+## INTRODUCTION
 
 This is our SearchEngine Project. It includes the following process:
 
@@ -9,11 +9,11 @@ Indexing the terms of each batch:
 creating posting files and writing information about the terms into them. 
 In addition, we create a file containing information about all the parsed documents and a united dictionary for the entire corpus.
 
-INFO
+## INFO
 
 project name : EngineA java version 1.8.0
 
-OPERATIONS
+## OPERATIONS
 
 Part A-
 Run the project jar file
