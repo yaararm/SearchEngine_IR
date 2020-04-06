@@ -21,7 +21,7 @@ project name : IR_SearchEngine java version 1.8.0
 
 ## OPERATIONS
 
-<img src="/Resources/se.PNG" width="500" height="550" alt="graph flow example">
+<img src="/Resources/se.PNG" width="400" height="550" alt="graph flow example">
 
 ## Part A-
 Run the project jar file
