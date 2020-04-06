@@ -39,9 +39,12 @@ Show dictionary : shows all the unique terms in the corpus with this total tf
 ## Part B-
 
 Pre Query:
+
 Press browse button to select an index path
 If the stemming option was selected on the corpus in part A,than select the stemming option again.
 Press 'load Dictionary' button to load the dictionary to the memory
+
+
 
 Query:
 
@@ -55,6 +58,7 @@ Type query in the Query text area, you can enable semantic option and press run 
 Now, wait until the searching process is finish, then press 'show result' to see the results.
 
 If you would like to choose document to see its entities,stand on the specific document row and press button 'Show Entities'.
+
 
 
 
