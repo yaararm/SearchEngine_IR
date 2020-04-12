@@ -1,5 +1,5 @@
 /**
- * this function responsible to read the entire corpus and separated the files to documents
+ * this class responsible to read the entire corpus and separated the files to documents
  */
 package Model;
 
